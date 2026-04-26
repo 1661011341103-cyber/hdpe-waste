@@ -1429,14 +1429,15 @@ function renderUsersList() {
         <span style="margin-left:8px;font-size:11px;padding:2px 6px;border-radius:10px;background:${u.role==='admin'?'#c0392b':u.role==='operator'?'#2980b9':'#27ae60'};color:#fff">${u.role}</span>
       </div>
       <div style="display:flex;gap:6px">
-        ${canDo('admin')?`<button class="btn btn-secondary btn-sm" onclick="editUser('${u.id}')">✏️</button>`:''}
-        ${canDo('admin')&&u.id!=='1'?`<button class="btn btn-danger btn-sm" onclick="deleteUser('${u.id}')">🗑</button>`:''}
+        ${currentUser&&currentUser.role==='admin'?`<button class="btn btn-secondary btn-sm" onclick="editUser('${u.id}')">✏️</button>`:''}
+        ${currentUser&&currentUser.role==='admin'&&u.id!=='1'?`<button class="btn btn-danger btn-sm" onclick="deleteUser('${u.id}')">🗑</button>`:''}
       </div>
     </div>`).join('');
   // แสดงปุ่มเพิ่ม User เฉพาะ Admin
   const btnWrap = document.getElementById('addUserBtnWrap');
   if (btnWrap) {
-    btnWrap.innerHTML = canDo('admin')
+    const isAdmin = currentUser && currentUser.role === 'admin';
+    btnWrap.innerHTML = isAdmin
       ? `<button class="btn btn-primary btn-sm" onclick="showAddUserModal()" style="width:100%">+ เพิ่มผู้ใช้</button>`
       : '';
   }
