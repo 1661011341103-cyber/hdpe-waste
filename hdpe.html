@@ -1,0 +1,4134 @@
+﻿<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="HDPE">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#c0392b">
+<meta name="format-detection" content="telephone=no">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>HDPE Waste Tracker | RMUTR × SSW1988</title>
+<style>
+:root {
+  --accent:#c0392b; --accent2:#e74c3c; --bg:#f0f2f5; --surface:#ffffff;
+  --surface2:#f8f9fa; --border:#dee2e6; --text:#212529; --text2:#6c757d;
+  --shadow:0 2px 8px rgba(0,0,0,.1); --radius:10px;
+  --green:#27ae60; --yellow:#f39c12; --red:#c0392b; --blue:#2980b9;
+}
+[data-theme="dark"] {
+  --bg:#1a1a2e; --surface:#16213e; --surface2:#0f3460; --border:#2d3561;
+  --text:#e0e0e0; --text2:#9e9e9e; --shadow:0 2px 8px rgba(0,0,0,.4);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Tahoma,sans-serif;background:var(--bg);color:var(--text);font-size:14px;transition:background .3s,color .3s}
+/* LOGIN */
+#loginScreen{position:fixed;inset:0;background:linear-gradient(135deg,#1a1a2e,#16213e);display:flex;align-items:center;justify-content:center;z-index:9999}
+.login-box{background:#16213e;border:1px solid #2d3561;border-radius:16px;padding:40px;width:360px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.login-logo{font-size:22px;font-weight:700;color:#c0392b;margin-bottom:4px}
+.login-sub{color:#9e9e9e;font-size:13px;margin-bottom:24px}
+.login-user-input{width:100%;padding:10px 14px;border-radius:8px;border:1px solid #2d3561;background:#0f3460;color:#e0e0e0;font-size:14px;margin-bottom:12px;outline:none}
+.login-user-input:focus{border-color:#c0392b}
+.pin-display{background:#0f3460;border-radius:10px;padding:16px;font-size:28px;letter-spacing:12px;color:#e0e0e0;margin-bottom:16px;min-height:60px;display:flex;align-items:center;justify-content:center}
+.numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.numpad button{padding:14px;border:none;border-radius:8px;background:#0f3460;color:#e0e0e0;font-size:18px;cursor:pointer;transition:background .2s;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.numpad button:hover{background:#2d3561}
+.numpad button:active{background:#c0392b}
+.btn-login{width:100%;padding:12px;background:#c0392b;color:#fff;border:none;border-radius:8px;font-size:16px;cursor:pointer;font-weight:600;transition:background .2s}
+.btn-login:hover{background:#e74c3c}
+.login-error{color:#e74c3c;font-size:13px;margin-top:8px;min-height:20px}
+/* HEADER */
+#appHeader{background:var(--surface);border-bottom:2px solid var(--accent);padding:0 16px;display:flex;align-items:center;gap:12px;height:56px;position:sticky;top:0;z-index:100;box-shadow:var(--shadow)}
+.header-brand{font-size:16px;font-weight:700;color:var(--accent);white-space:nowrap}
+.header-search{flex:1;max-width:320px;padding:7px 12px;border-radius:20px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px;outline:none}
+.header-search:focus{border-color:var(--accent)}
+.header-user{font-size:12px;color:var(--text2);white-space:nowrap}
+.header-btns{display:flex;gap:6px;margin-left:auto}
+.btn-icon{padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--text);cursor:pointer;font-size:13px;transition:all .2s}
+.btn-icon:hover{background:var(--accent);color:#fff;border-color:var(--accent)}
+/* TABS */
+#tabBar{background:var(--surface);border-bottom:1px solid var(--border);display:flex;overflow-x:auto;padding:0 8px;gap:2px;position:sticky;top:56px;z-index:99}
+#tabBar::-webkit-scrollbar{height:3px}
+#tabBar::-webkit-scrollbar-thumb{background:var(--accent)}
+.tab-btn{padding:10px 14px;border:none;background:none;color:var(--text2);cursor:pointer;font-size:13px;white-space:nowrap;border-bottom:3px solid transparent;transition:all .2s;position:relative}
+.tab-btn.active{color:var(--accent);border-bottom-color:var(--accent);font-weight:600}
+.tab-btn:hover{color:var(--text)}
+.badge{position:absolute;top:6px;right:4px;background:var(--accent);color:#fff;border-radius:10px;font-size:10px;padding:1px 5px;min-width:16px;text-align:center}
+/* MAIN */
+#mainContent{padding:16px;max-width:1400px;margin:0 auto}
+.tab-panel{display:none}
+.tab-panel.active{display:block}
+/* CARDS */
+.card{background:var(--surface);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);margin-bottom:16px}
+.card-title{font-size:15px;font-weight:600;margin-bottom:12px;color:var(--text);display:flex;align-items:center;gap:8px}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+@media(max-width:768px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}}
+/* KPI */
+.kpi-card{background:var(--surface);border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);border-left:4px solid var(--accent);text-align:center}
+.kpi-val{font-size:28px;font-weight:700;color:var(--accent)}
+.kpi-label{font-size:12px;color:var(--text2);margin-top:4px}
+/* FORM */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px}
+.form-row-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:12px}
+.form-row-1{margin-bottom:12px}
+@media(max-width:600px){.form-row,.form-row-3{grid-template-columns:1fr}}
+.form-group label{display:block;font-size:12px;color:var(--text2);margin-bottom:4px;font-weight:500}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--text);font-size:13px;outline:none;transition:border .2s}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--accent)}
+.form-group textarea{resize:vertical;min-height:70px}
+/* BUTTONS */
+.btn{padding:8px 16px;border:none;border-radius:6px;cursor:pointer;font-size:13px;font-weight:500;transition:all .2s;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent2)}
+.btn-secondary{background:var(--surface2);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:hover{background:var(--border)}
+.btn-success{background:var(--green);color:#fff}
+.btn-warning{background:var(--yellow);color:#fff}
+.btn-danger{background:var(--red);color:#fff}
+.btn-sm{padding:4px 10px;font-size:12px}
+/* TABLE */
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{background:var(--surface2);padding:8px 10px;text-align:left;border-bottom:2px solid var(--border);font-weight:600;cursor:pointer;white-space:nowrap}
+th:hover{color:var(--accent)}
+td{padding:7px 10px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:hover td{background:var(--surface2)}
+/* BADGES */
+.badge-ok{background:#d4edda;color:#155724;padding:2px 8px;border-radius:10px;font-size:11px}
+.badge-warn{background:#fff3cd;color:#856404;padding:2px 8px;border-radius:10px;font-size:11px}
+.badge-danger{background:#f8d7da;color:#721c24;padding:2px 8px;border-radius:10px;font-size:11px}
+[data-theme="dark"] .badge-ok{background:#1a3a2a;color:#4caf50}
+[data-theme="dark"] .badge-warn{background:#3a2a00;color:#ffc107}
+[data-theme="dark"] .badge-danger{background:#3a1a1a;color:#ef5350}
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:1000;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal-box{background:var(--surface);border-radius:var(--radius);padding:24px;width:100%;max-width:700px;max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(0,0,0,.4)}
+.modal-title{font-size:16px;font-weight:700;margin-bottom:16px;color:var(--accent)}
+.modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:16px;padding-top:16px;border-top:1px solid var(--border)}
+/* TOAST */
+#toastContainer{position:fixed;bottom:20px;right:20px;z-index:9998;display:flex;flex-direction:column;gap:8px}
+.toast{padding:12px 18px;border-radius:8px;color:#fff;font-size:13px;box-shadow:0 4px 12px rgba(0,0,0,.3);animation:slideIn .3s ease;max-width:320px}
+.toast-success{background:#27ae60}
+.toast-error{background:#c0392b}
+.toast-info{background:#2980b9}
+.toast-warn{background:#f39c12}
+@keyframes slideIn{from{transform:translateX(100%);opacity:0}to{transform:translateX(0);opacity:1}}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+/* WASTE RATE PREVIEW */
+.waste-preview{background:var(--surface2);border-radius:8px;padding:12px;margin-bottom:12px;display:flex;align-items:center;gap:12px}
+.waste-rate-big{font-size:32px;font-weight:700}
+/* PROGRESS BAR */
+.progress-bar{background:var(--border);border-radius:4px;height:8px;overflow:hidden;margin-top:4px}
+.progress-fill{height:100%;border-radius:4px;transition:width .5s}
+/* ALERT BANNER */
+.alert-banner{padding:10px 14px;border-radius:8px;margin-bottom:8px;font-size:13px;display:flex;align-items:center;gap:8px}
+.alert-banner.warn{background:#fff3cd;color:#856404;border-left:4px solid #f39c12}
+.alert-banner.danger{background:#f8d7da;color:#721c24;border-left:4px solid #c0392b}
+[data-theme="dark"] .alert-banner.warn{background:#3a2a00;color:#ffc107}
+[data-theme="dark"] .alert-banner.danger{background:#3a1a1a;color:#ef5350}
+/* TV MODE */
+#tvMode{display:none;position:fixed;inset:0;background:#0a0a1a;z-index:9990;overflow:auto;padding:20px}
+#tvMode.active{display:block}
+.tv-header{text-align:center;color:#c0392b;font-size:28px;font-weight:700;margin-bottom:20px}
+.tv-kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:20px}
+.tv-kpi{background:#16213e;border-radius:12px;padding:20px;text-align:center;border:1px solid #2d3561}
+.tv-kpi-val{font-size:42px;font-weight:700;color:#c0392b}
+.tv-kpi-label{color:#9e9e9e;font-size:14px;margin-top:6px}
+/* OEE BARS */
+.oee-bar-wrap{margin-bottom:8px}
+.oee-bar-label{display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px}
+.oee-bar{height:14px;border-radius:7px;background:var(--border);overflow:hidden}
+.oee-fill{height:100%;border-radius:7px;transition:width .5s}
+.oee-green{background:#27ae60}
+.oee-yellow{background:#f39c12}
+.oee-red{background:#c0392b}
+/* FILTER BAR */
+.filter-bar{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;align-items:center}
+.filter-bar input,.filter-bar select{padding:6px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--text);font-size:12px;outline:none}
+.filter-bar input:focus,.filter-bar select:focus{border-color:var(--accent)}
+/* PAGINATION */
+.pagination{display:flex;gap:4px;align-items:center;justify-content:center;margin-top:12px;flex-wrap:wrap}
+.page-btn{padding:5px 10px;border:1px solid var(--border);border-radius:4px;background:var(--surface2);color:var(--text);cursor:pointer;font-size:12px}
+.page-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.page-btn:hover:not(.active){background:var(--border)}
+/* SECTION DIVIDER */
+.section-divider{border:none;border-top:1px solid var(--border);margin:16px 0}
+/* CANVAS */
+canvas{max-width:100%}
+/* SETTINGS SECTION */
+.settings-section{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.settings-section:last-child{border-bottom:none}
+.settings-title{font-size:14px;font-weight:600;margin-bottom:12px;color:var(--accent)}
+/* RECIPE CARD */
+.recipe-card{background:var(--surface2);border-radius:8px;padding:12px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center;border:1px solid var(--border)}
+.recipe-name{font-weight:600;font-size:13px}
+.recipe-meta{font-size:11px;color:var(--text2);margin-top:2px}
+/* DOWNTIME */
+.dt-reason-badge{padding:2px 8px;border-radius:10px;font-size:11px;background:var(--surface2);border:1px solid var(--border)}
+/* 5WHY */
+.why-section{background:var(--surface2);border-radius:8px;padding:12px;margin-bottom:12px;border-left:3px solid var(--accent)}
+.why-section .why-title{font-size:13px;font-weight:600;margin-bottom:10px;color:var(--accent)}
+/* SHIFT SCHEDULE */
+.schedule-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.schedule-cell{background:var(--surface2);border-radius:6px;padding:8px;border:1px solid var(--border);font-size:12px}
+.schedule-cell .shift-label{font-weight:600;color:var(--accent);margin-bottom:4px}
+/* SCROLLBAR */
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+/* PRINT */
+@media print{#appHeader,#tabBar,.btn,button{display:none!important}.tab-panel{display:block!important}}
+</style>
+</head>
+<body>
+<!-- LOGIN SCREEN -->
+<div id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">RMUTR × SSW1988</div>
+    <div id="loginLogos" style="display:flex;justify-content:center;gap:12px;margin-bottom:12px">
+      <img id="loginLogoImg" src="" alt="logo1" style="height:60px;border-radius:8px;display:none">
+      <img id="loginLogoImg2" src="" alt="logo2" style="height:60px;border-radius:8px;display:none">
+    </div>
+    <div class="login-sub">ระบบติดตามของเสีย HDPE</div>
+    <input type="text" id="loginUsername" class="login-user-input" placeholder="ชื่อผู้ใช้ (Username)" autocomplete="off">
+    <div class="pin-display" id="pinDisplay">••••</div>
+    <div class="numpad">
+      <button onclick="numpadPress('1')">1</button>
+      <button onclick="numpadPress('2')">2</button>
+      <button onclick="numpadPress('3')">3</button>
+      <button onclick="numpadPress('4')">4</button>
+      <button onclick="numpadPress('5')">5</button>
+      <button onclick="numpadPress('6')">6</button>
+      <button onclick="numpadPress('7')">7</button>
+      <button onclick="numpadPress('8')">8</button>
+      <button onclick="numpadPress('9')">9</button>
+      <button onclick="numpadPress('clear')" style="color:#f39c12">C</button>
+      <button onclick="numpadPress('0')">0</button>
+      <button onclick="numpadPress('back')" style="color:#e74c3c">⌫</button>
+    </div>
+    <button class="btn-login" onclick="doLogin()">เข้าสู่ระบบ</button>
+    <div class="login-error" id="loginError"></div>
+  </div>
+</div>
+<!-- TOAST -->
+<div id="toastContainer"></div>
+<!-- TV MODE -->
+<div id="tvMode">
+  <div class="tv-header">🏭 RMUTR × SSW1988 — HDPE Dashboard</div>
+  <div class="tv-kpi-grid" id="tvKpiGrid"></div>
+  <div class="grid-2">
+    <div style="background:#16213e;border-radius:12px;padding:16px;border:1px solid #2d3561">
+      <div style="color:#9e9e9e;margin-bottom:8px;font-size:14px">แนวโน้มของเสีย 7 วัน</div>
+      <canvas id="tvTrendChart" height="180"></canvas>
+    </div>
+    <div style="background:#16213e;border-radius:12px;padding:16px;border:1px solid #2d3561">
+      <div style="color:#9e9e9e;margin-bottom:8px;font-size:14px">สถานะเครื่องจักร</div>
+      <div id="tvMachineStatus"></div>
+    </div>
+  </div>
+  <div style="text-align:center;color:#555;font-size:12px;margin-top:16px" id="tvRefreshInfo"></div>
+  <button onclick="exitTvMode()" style="position:fixed;top:16px;right:16px;background:#c0392b;color:#fff;border:none;border-radius:6px;padding:8px 14px;cursor:pointer;font-size:13px">✕ ออก</button>
+</div>
+<!-- APP -->
+<div id="app" style="display:none">
+  <header id="appHeader">
+    <img id="headerLogo" src="" alt="" style="height:36px;border-radius:6px;display:none;margin-right:4px">
+    <img id="headerLogo2" src="" alt="" style="height:36px;border-radius:6px;display:none;margin-right:8px">
+    <div class="header-brand">RMUTR × SSW1988</div>
+    <input type="text" class="header-search" id="globalSearch" placeholder="🔍 ค้นหา..." oninput="globalSearchHandler()">
+    <div class="header-user" id="headerUser"></div>
+    <span id="syncStatus" style="font-size:12px;margin-left:4px">☁️</span>
+    <span id="todayCounter" style="font-size:12px;margin-left:8px;background:rgba(255,255,255,0.15);padding:3px 8px;border-radius:12px;color:#fff"></span>
+    <div class="header-btns">
+      <button class="btn-icon" onclick="enterTvMode()" title="TV Mode">📺</button>
+      <button class="btn-icon" onclick="manualSync()" title="Sync ข้อมูล">🔄</button>
+      <button class="btn-icon" onclick="toggleTheme()" id="themeBtn" title="สลับธีม">🌙</button>
+      <button class="btn-icon" onclick="doLogout()" title="ออกจากระบบ">🚪</button>
+    </div>
+  </header>
+  <nav id="tabBar">
+    <button class="tab-btn active" onclick="switchTab('dashboard')">📊 แดชบอร์ด</button>
+    <button class="tab-btn" onclick="switchTab('record')">📝 บันทึกข้อมูล</button>
+    <button class="tab-btn" onclick="switchTab('records')">📋 รายการบันทึก</button>
+    <button class="tab-btn" onclick="switchTab('maintenance')" id="tabMaintenance">🔧 ทำความสะอาด</button>
+    <button class="tab-btn" onclick="switchTab('downtime')">⏱ Downtime</button>
+    <button class="tab-btn" onclick="switchTab('recipe')">📋 สูตรผลิต</button>
+    <button class="tab-btn" onclick="switchTab('analysis')">🔬 วิเคราะห์</button>
+    <button class="tab-btn" onclick="switchTab('report')">📄 รายงาน</button>
+    <button class="tab-btn" onclick="switchTab('settings')">⚙️ ตั้งค่า</button>
+  </nav>
+  <div id="mainContent">
+
+    <!-- DASHBOARD TAB -->
+    <div class="tab-panel active" id="panel-dashboard">
+      <div id="alertBanners"></div>
+      <div class="grid-4" id="kpiGrid" style="margin-bottom:16px"></div>
+      <!-- OEE Section -->
+      <div class="card">
+        <div class="card-title">⚙️ OEE Dashboard</div>
+        <div id="oeeGrid" class="grid-4"></div>
+      </div>
+      <!-- Today's Shift Schedule -->
+      <div class="card">
+        <div class="card-title">📅 ตารางเวรวันนี้</div>
+        <div id="todaySchedule"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">📈 แนวโน้มของเสีย 7 วัน</div>
+        <canvas id="trendChart" height="320"></canvas>
+      </div>
+      <div class="card">
+        <div class="card-title">🏭 ของเสียตามเครื่อง</div>
+        <canvas id="machineChart" height="320"></canvas>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">🍩 ประเภทของเสีย</div>
+          <canvas id="donutChart" height="300"></canvas>
+        </div>
+        <div class="card">
+          <div class="card-title">📊 Pareto Chart</div>
+          <canvas id="paretoChart" height="300"></canvas>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">🌙 ของเสียตามกะ</div>
+          <canvas id="shiftChart" height="300"></canvas>
+        </div>
+        <div class="card">
+          <div class="card-title">🔵 Scatter: ผลผลิต vs ของเสีย</div>
+          <canvas id="scatterChart" height="300"></canvas>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">🏆 Top 5 เครื่องของเสียสูงสุด</div>
+          <div id="top5List"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">🔧 สถานะเครื่องจักร</div>
+          <div id="machineStatusBars"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECORD TAB -->
+    <div class="tab-panel" id="panel-record">
+      <div class="card">
+        <div class="card-title">📝 บันทึกข้อมูลของเสีย</div>
+        <!-- Template & Recipe & Excel -->
+        <div class="form-row" style="margin-bottom:12px">
+          <div class="form-group">
+            <label>โหลดสูตรการผลิต</label>
+            <select id="recipeSelect" onchange="applyRecipe()">
+              <option value="">-- เลือกสูตร --</option>
+            </select>
+            <button class="btn btn-secondary btn-sm" onclick="compareWithRecipe()" title="เปรียบเทียบกับสูตร" style="margin-top:4px;width:100%">📊 เปรียบเทียบ</button>
+          </div>
+          <div class="form-group">
+            <label>เทมเพลต</label>
+            <div style="display:flex;gap:6px">
+              <select id="templateSelect" style="flex:1">
+                <option value="">-- เลือกเทมเพลต --</option>
+              </select>
+              <button class="btn btn-secondary btn-sm" onclick="applyTemplate()">โหลด</button>
+              <button class="btn btn-secondary btn-sm" onclick="saveTemplate()">บันทึก</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteTemplate()" title="ลบเทมเพลตที่เลือก">🗑</button>
+            </div>
+          </div>
+        </div>
+        <!-- Load from Excel -->
+        <div style="margin-bottom:14px;padding:10px;background:var(--surface2);border-radius:8px;border:1px dashed var(--border);display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <span style="font-size:13px;color:var(--text2)">📂 โหลดข้อมูลจาก Excel:</span>
+          <label class="btn btn-secondary btn-sm" style="cursor:pointer;margin:0">
+            📊 เลือกไฟล์ Excel (.xlsx/.xls)
+            <input type="file" id="excelFormFile" accept=".xlsx,.xls,.csv" onchange="loadExcelToForm(event)" style="display:none">
+          </label>
+          <span style="font-size:11px;color:var(--text2)">ระบบจะดึงข้อมูลแถวแรกมาเติมในฟอร์มอัตโนมัติ</span>
+        </div>
+        <!-- Basic Info -->
+        <div class="form-row">
+          <div class="form-group">
+            <label>เลขที่ใบสั่งผลิต *</label>
+            <input type="text" id="f_orderId" placeholder="WO-2024-001">
+          </div>
+          <div class="form-group">
+            <label>วันที่ *</label>
+            <input type="date" id="f_date">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>เครื่องจักร *</label>
+            <select id="f_machine" onchange="autoFillResponsible()">
+              <option value="">-- เลือกเครื่อง --</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>กะการผลิต *</label>
+            <select id="f_shift" onchange="autoFillResponsible()">
+              <option value="เช้า">เช้า (06:00-14:00)</option>
+              <option value="บ่าย">บ่าย (14:00-22:00)</option>
+              <option value="ดึก">ดึก (22:00-06:00)</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>ผู้รับผิดชอบ *</label>
+            <input type="text" id="f_responsible" placeholder="ชื่อผู้รับผิดชอบ">
+          </div>
+          <div class="form-group">
+            <label>ซัพพลายเออร์</label>
+            <input type="text" id="f_supplier" placeholder="ชื่อซัพพลายเออร์">
+          </div>
+        </div>
+        <!-- Material Lot -->
+        <div class="form-row">
+          <div class="form-group">
+            <label>Lot วัตถุดิบ</label>
+            <input type="text" id="f_lotNo" placeholder="LOT-2024-001">
+          </div>
+          <div class="form-group">
+            <label>ชนิดเม็ดพลาสติก</label>
+            <input type="text" id="f_materialType" placeholder="เช่น HDPE HD5502, LLDPE">
+          </div>
+        </div>
+        <!-- Bag Info -->
+        <div class="form-row">
+          <div class="form-group">
+            <label>ขนาดถุง</label>
+            <select id="f_bagSize" onchange="toggleCustomBag()">
+              <option value="6x10">6×10 นิ้ว</option>
+              <option value="8x12">8×12 นิ้ว</option>
+              <option value="10x15">10×15 นิ้ว</option>
+              <option value="12x18">12×18 นิ้ว</option>
+              <option value="custom">กำหนดเอง</option>
+            </select>
+          </div>
+          <div class="form-group" id="customBagGroup" style="display:none">
+            <label>ขนาดกำหนดเอง</label>
+            <input type="text" id="f_bagCustom" placeholder="เช่น 15×20">
+          </div>
+          <div class="form-group">
+            <label>ความหนา (ไมครอน)</label>
+            <input type="number" id="f_thickness" placeholder="25" min="1" oninput="suggestTemperature()">
+            <div id="tempSuggestion" style="display:none;margin-top:6px;padding:8px;background:var(--surface2);border-radius:6px;border-left:3px solid var(--accent);font-size:12px"></div>
+          </div>
+        </div>
+        <!-- Temperature -->
+        <div class="form-row-3">
+          <div class="form-group">
+            <label>Zone 1 (°C)</label>
+            <input type="number" id="f_zone1" placeholder="180">
+          </div>
+          <div class="form-group">
+            <label>Zone 2 (°C)</label>
+            <input type="number" id="f_zone2" placeholder="185">
+          </div>
+          <div class="form-group">
+            <label>Zone 3 (°C)</label>
+            <input type="number" id="f_zone3" placeholder="190">
+          </div>
+        </div>
+        <div class="form-row-3">
+          <div class="form-group">
+            <label>Flange Temp (°C)</label>
+            <input type="number" id="f_flangeTemp" placeholder="195">
+          </div>
+          <div class="form-group">
+            <label>Die Temp (°C)</label>
+            <input type="number" id="f_dieTemp" placeholder="200">
+          </div>
+          <div class="form-group">
+            <label>Screw Motor (kW)</label>
+            <input type="number" id="f_screwMotor" placeholder="15.5" step="0.1">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Thickness Motor (Hz)</label>
+            <input type="number" id="f_thickMotor" placeholder="45" step="0.1">
+          </div>
+          <div class="form-group">
+            <label>ประเภทของเสีย *</label>
+            <select id="f_wasteType">
+              <option value="จุดดำ">จุดดำ</option>
+              <option value="ฟิล์มขาด">ฟิล์มขาด</option>
+              <option value="ความหนาไม่สม่ำเสมอ">ความหนาไม่สม่ำเสมอ</option>
+              <option value="สีผิดปกติ">สีผิดปกติ</option>
+              <option value="รอยย่น">รอยย่น</option>
+              <option value="ฟองอากาศ">ฟองอากาศ</option>
+              <option value="อื่นๆ">อื่นๆ</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>ปริมาณผลผลิต (kg) *</label>
+            <input type="number" id="f_prodQty" placeholder="500" min="0" step="0.1" oninput="updateWastePreview()">
+          </div>
+          <div class="form-group">
+            <label>ปริมาณของเสีย (kg) *</label>
+            <input type="number" id="f_wasteQty" placeholder="10" min="0" step="0.1" oninput="updateWastePreview()">
+          </div>
+        </div>
+        <!-- Waste Rate Preview -->
+        <div class="waste-preview" id="wastePreview">
+          <div>
+            <div style="font-size:12px;color:var(--text2)">อัตราของเสีย</div>
+            <div class="waste-rate-big" id="wasteRateDisplay" style="color:var(--green)">0.00%</div>
+          </div>
+          <div style="flex:1">
+            <div style="font-size:12px;color:var(--text2)">เป้าหมาย: <span id="targetDisplay">3%</span></div>
+            <div class="progress-bar" style="margin-top:6px">
+              <div class="progress-fill" id="wasteProgressBar" style="width:0%;background:var(--green)"></div>
+            </div>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>สาเหตุ</label>
+            <textarea id="f_cause" placeholder="ระบุสาเหตุของเสีย..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>แนวทางแก้ไข</label>
+            <textarea id="f_solution" placeholder="ระบุแนวทางแก้ไข..."></textarea>
+          </div>
+        </div>
+        <!-- 5-Why Analysis -->
+        <div class="why-section">
+          <div class="why-title">🔍 การวิเคราะห์ 5-Why</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Why 1: ทำไมจึงเกิดปัญหา?</label>
+              <input type="text" id="f_why1" placeholder="เพราะ...">
+            </div>
+            <div class="form-group">
+              <label>Why 2: ทำไม Why 1 จึงเกิดขึ้น?</label>
+              <input type="text" id="f_why2" placeholder="เพราะ...">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Why 3</label>
+              <input type="text" id="f_why3" placeholder="เพราะ...">
+            </div>
+            <div class="form-group">
+              <label>Why 4</label>
+              <input type="text" id="f_why4" placeholder="เพราะ...">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Why 5</label>
+              <input type="text" id="f_why5" placeholder="เพราะ...">
+            </div>
+            <div class="form-group">
+              <label>สาเหตุรากเหง้า (Root Cause)</label>
+              <input type="text" id="f_rootCause" placeholder="สาเหตุที่แท้จริง...">
+            </div>
+          </div>
+        </div>
+        <!-- 5M1E Fishbone -->
+        <div class="why-section" style="border-left-color:#2980b9;margin-top:12px">
+          <div class="why-title" style="color:#2980b9">🐟 การวิเคราะห์ 5M1E (Fishbone Diagram)</div>
+          <div class="form-row" style="margin-bottom:10px">
+            <div class="form-group">
+              <label>🎯 หัวข้อปัญหา (Problem Statement)</label>
+              <input type="text" id="f_5m_problem" placeholder="เช่น ของเสียเกินเกณฑ์, ฟิล์มขาดบ่อย, จุดดำในถุง...">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>👤 Man (คน/พนักงาน)</label>
+              <textarea id="f_5m_man" placeholder="เช่น ขาดทักษะ, ความเหนื่อยล้า, ขาดการฝึกอบรม..." style="min-height:60px"></textarea>
+            </div>
+            <div class="form-group">
+              <label>🏭 Machine (เครื่องจักร)</label>
+              <textarea id="f_5m_machine" placeholder="เช่น เครื่องเก่า, ไม่ได้บำรุงรักษา, ตั้งค่าผิด..." style="min-height:60px"></textarea>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>🧪 Material (วัตถุดิบ)</label>
+              <textarea id="f_5m_material" placeholder="เช่น คุณภาพวัตถุดิบต่ำ, Lot ผิดปกติ, ความชื้น..." style="min-height:60px"></textarea>
+            </div>
+            <div class="form-group">
+              <label>📋 Method (วิธีการ)</label>
+              <textarea id="f_5m_method" placeholder="เช่น ขั้นตอนไม่ถูกต้อง, ไม่มี SOP, ปรับพารามิเตอร์ผิด..." style="min-height:60px"></textarea>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>📏 Measurement (การวัด)</label>
+              <textarea id="f_5m_measurement" placeholder="เช่น เครื่องมือวัดไม่แม่นยำ, ไม่มีการตรวจสอบ..." style="min-height:60px"></textarea>
+            </div>
+            <div class="form-group">
+              <label>🌡 Environment (สภาพแวดล้อม)</label>
+              <textarea id="f_5m_environment" placeholder="เช่น อุณหภูมิห้อง, ความชื้น, ฝุ่นละออง..." style="min-height:60px"></textarea>
+            </div>
+          </div>
+          <div style="margin-top:8px">
+            <button class="btn btn-sm" style="background:#2980b9;color:#fff" onclick="previewFishbone()">🐟 ดู Fishbone Diagram</button>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+          <button class="btn btn-primary" onclick="saveRecord()">💾 บันทึกข้อมูล <span style="font-size:10px;opacity:0.7">(Ctrl+S)</span></button>
+          <button class="btn btn-secondary" onclick="clearForm()">🗑 ล้างฟอร์ม <span style="font-size:10px;opacity:0.7">(Ctrl+Shift+Z)</span></button>
+          <button class="btn btn-secondary" onclick="exportCSV()">📥 Export CSV</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECORDS TAB -->
+    <div class="tab-panel" id="panel-records">
+      <div class="card">
+        <div class="card-title">📋 รายการบันทึกทั้งหมด</div>
+        <div class="filter-bar">
+          <input type="date" id="flt_dateFrom" placeholder="จากวันที่">
+          <input type="date" id="flt_dateTo" placeholder="ถึงวันที่">
+          <select id="flt_machine"><option value="">ทุกเครื่อง</option></select>
+          <select id="flt_shift"><option value="">ทุกกะ</option><option value="เช้า">เช้า</option><option value="บ่าย">บ่าย</option><option value="ดึก">ดึก</option></select>
+          <select id="flt_wasteType"><option value="">ทุกประเภท</option></select>
+          <input type="text" id="flt_lotNo" placeholder="Lot วัตถุดิบ">
+          <input type="text" id="flt_search" placeholder="ค้นหา...">
+          <button class="btn btn-primary btn-sm" onclick="applyFilters()">🔍 กรอง</button>
+          <button class="btn btn-secondary btn-sm" onclick="clearFilters()">✕ ล้าง</button>
+          <button class="btn btn-secondary btn-sm" onclick="exportCSV()">📥 CSV</button>
+          <button class="btn btn-secondary btn-sm" onclick="showImportCSV()">📤 Import CSV/Excel</button>
+          <button class="btn btn-secondary btn-sm" onclick="backupJSON()">💾 Backup</button>
+        </div>
+        <div id="recordsSummary" style="margin-bottom:8px;font-size:13px;color:var(--text2)"></div>
+        <div class="tbl-wrap">
+          <table id="recordsTable">
+            <thead>
+              <tr>
+                <th onclick="sortRecords('date')">วันที่ ↕</th>
+                <th onclick="sortRecords('orderId')">ใบสั่งผลิต ↕</th>
+                <th onclick="sortRecords('machine')">เครื่อง ↕</th>
+                <th>กะ</th>
+                <th>Lot</th>
+                <th>วัตถุดิบ</th>
+                <th onclick="sortRecords('wasteType')">ประเภทของเสีย ↕</th>
+                <th onclick="sortRecords('prodQty')">ผลผลิต(kg) ↕</th>
+                <th onclick="sortRecords('wasteQty')">ของเสีย(kg) ↕</th>
+                <th onclick="sortRecords('wasteRate')">อัตรา% ↕</th>
+                <th>ผู้บันทึก</th>
+                <th>จัดการ</th>
+              </tr>
+            </thead>
+            <tbody id="recordsTbody"></tbody>
+          </table>
+        </div>
+        <div class="pagination" id="recordsPagination"></div>
+      </div>
+    </div>
+
+    <!-- MAINTENANCE TAB -->
+    <div class="tab-panel" id="panel-maintenance">
+      <div id="maintenanceAlerts" style="margin-bottom:12px"></div>
+      <div class="card">
+        <div class="card-title">🔧 สถานะการบำรุงรักษา</div>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>เครื่อง</th>
+                <th>เปลี่ยนตะแกรง (7วัน)</th>
+                <th>ทำความสะอาดหัวดาย (7วัน)</th>
+                <th>ทำความสะอาดจานลม (4ชม.)</th>
+              </tr>
+            </thead>
+            <tbody id="maintenanceTbody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">📝 บันทึกการบำรุงรักษา</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>เครื่อง</label>
+            <select id="mt_machine"></select>
+          </div>
+          <div class="form-group">
+            <label>งาน</label>
+            <select id="mt_task">
+              <option value="เปลี่ยนตะแกรง">เปลี่ยนตะแกรง</option>
+              <option value="ทำความสะอาดหัวดาย">ทำความสะอาดหัวดาย</option>
+              <option value="ทำความสะอาดจานลม">ทำความสะอาดจานลม</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>วันที่/เวลา</label>
+            <input type="datetime-local" id="mt_datetime">
+          </div>
+          <div class="form-group">
+            <label>ผู้ดำเนินการ</label>
+            <input type="text" id="mt_operator" placeholder="ชื่อผู้ดำเนินการ">
+          </div>
+        </div>
+        <div class="form-row-1 form-group">
+          <label>หมายเหตุ</label>
+          <textarea id="mt_note" placeholder="หมายเหตุ..."></textarea>
+        </div>
+        <button class="btn btn-primary" onclick="saveMaintenance()">💾 บันทึก</button>
+      </div>
+      <div class="card">
+        <div class="card-title">📜 ประวัติการบำรุงรักษา</div>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr><th>วันที่/เวลา</th><th>เครื่อง</th><th>งาน</th><th>ผู้ดำเนินการ</th><th>หมายเหตุ</th><th>จัดการ</th></tr>
+            </thead>
+            <tbody id="maintenanceHistoryTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- DOWNTIME TAB -->
+    <div class="tab-panel" id="panel-downtime">
+      <div class="card">
+        <div class="card-title">⏱ บันทึกการหยุดเครื่อง</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>เครื่อง *</label>
+            <select id="dt_machine"></select>
+          </div>
+          <div class="form-group">
+            <label>วันที่ *</label>
+            <input type="date" id="dt_date">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>เวลาเริ่ม *</label>
+            <input type="time" id="dt_startTime">
+          </div>
+          <div class="form-group">
+            <label>เวลาสิ้นสุด *</label>
+            <input type="time" id="dt_endTime">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>สาเหตุ *</label>
+            <select id="dt_reason">
+              <option value="ซ่อมบำรุง">ซ่อมบำรุง</option>
+              <option value="เปลี่ยนแม่พิมพ์">เปลี่ยนแม่พิมพ์</option>
+              <option value="รอวัตถุดิบ">รอวัตถุดิบ</option>
+              <option value="ไฟดับ">ไฟดับ</option>
+              <option value="อื่นๆ">อื่นๆ</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>รายละเอียด</label>
+            <input type="text" id="dt_details" placeholder="รายละเอียดเพิ่มเติม...">
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="saveDowntime()">💾 บันทึก</button>
+      </div>
+      <div class="card">
+        <div class="card-title">📜 ประวัติการหยุดเครื่อง</div>
+        <div class="filter-bar">
+          <select id="dt_flt_machine"><option value="">ทุกเครื่อง</option></select>
+          <input type="date" id="dt_flt_date">
+          <button class="btn btn-primary btn-sm" onclick="renderDowntimeTable()">🔍 กรอง</button>
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr><th>วันที่</th><th>เครื่อง</th><th>เวลาเริ่ม</th><th>เวลาสิ้นสุด</th><th>ระยะเวลา(ชม.)</th><th>สาเหตุ</th><th>รายละเอียด</th><th>จัดการ</th></tr>
+            </thead>
+            <tbody id="downtimeTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- RECIPE TAB -->
+    <div class="tab-panel" id="panel-recipe">
+      <div class="card">
+        <div class="card-title">📋 สร้างสูตรการผลิต</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>ชื่อสูตร *</label>
+            <input type="text" id="rc_name" placeholder="เช่น HDPE ถุงแดง 25 ไมครอน">
+          </div>
+          <div class="form-group">
+            <label>ประเภทถุง</label>
+            <input type="text" id="rc_bagType" placeholder="เช่น ถุงหูหิ้ว, ถุงแบน">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>ขนาดถุง</label>
+            <input type="text" id="rc_bagSize" placeholder="เช่น 10×15">
+          </div>
+          <div class="form-group">
+            <label>ความหนา (ไมครอน)</label>
+            <input type="number" id="rc_thickness" placeholder="25">
+          </div>
+        </div>
+        <div class="form-row-3">
+          <div class="form-group">
+            <label>Zone 1 (°C)</label>
+            <input type="number" id="rc_zone1" placeholder="180">
+          </div>
+          <div class="form-group">
+            <label>Zone 2 (°C)</label>
+            <input type="number" id="rc_zone2" placeholder="185">
+          </div>
+          <div class="form-group">
+            <label>Zone 3 (°C)</label>
+            <input type="number" id="rc_zone3" placeholder="190">
+          </div>
+        </div>
+        <div class="form-row-3">
+          <div class="form-group">
+            <label>Flange Temp (°C)</label>
+            <input type="number" id="rc_flangeTemp" placeholder="195">
+          </div>
+          <div class="form-group">
+            <label>Die Temp (°C)</label>
+            <input type="number" id="rc_dieTemp" placeholder="200">
+          </div>
+          <div class="form-group">
+            <label>Screw Motor (kW)</label>
+            <input type="number" id="rc_screwMotor" placeholder="15.5" step="0.1">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Thickness Motor (Hz)</label>
+            <input type="number" id="rc_thickMotor" placeholder="45" step="0.1">
+          </div>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-primary" onclick="saveRecipe()">💾 บันทึกสูตร</button>
+          <button class="btn btn-secondary" onclick="clearRecipeForm()">🗑 ล้าง</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">📚 สูตรการผลิตที่บันทึกไว้</div>
+        <div id="recipeList"></div>
+      </div>
+    </div>
+
+    <!-- ANALYSIS TAB -->
+    <div class="tab-panel" id="panel-analysis">
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">📊 SPC Chart (อัตราของเสีย)</div>
+          <canvas id="spcChart" height="280"></canvas>
+        </div>
+        <div class="card">
+          <div class="card-title">📅 เปรียบเทียบรายเดือน</div>
+          <canvas id="monthChart" height="280"></canvas>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">🏭 ของเสียตามซัพพลายเออร์</div>
+          <canvas id="supplierChart" height="280"></canvas>
+        </div>
+        <div class="card">
+          <div class="card-title">🧪 ของเสียตาม Lot วัตถุดิบ</div>
+          <canvas id="lotChart" height="280"></canvas>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">💡 Insights อัตโนมัติ</div>
+        <div id="insightsPanel"></div>
+      </div>
+      <div class="card">
+        <div class="card-title">🔍 รายการที่มีการวิเคราะห์ 5-Why</div>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr><th>วันที่</th><th>เครื่อง</th><th>ประเภทของเสีย</th><th>Root Cause</th><th>Why 1</th><th>Why 2</th><th>Why 3</th><th>Why 4</th><th>Why 5</th></tr>
+            </thead>
+            <tbody id="fiveWhyTbody"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">&#x1F41F; Fishbone Diagram (5M1E) — รายการที่มีการวิเคราะห์</div>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr><th>วันที่</th><th>เครื่อง</th><th>ประเภทของเสีย</th><th>Man</th><th>Machine</th><th>Material</th><th>Method</th><th>Measurement</th><th>Environment</th><th></th></tr>
+            </thead>
+            <tbody id="fishboneTbody"></tbody></table></div>
+        <div class="filter-bar" style="margin-bottom:10px"><select id="fishbone_filterMachine" onchange="renderFishboneTable(getRecords())"><option value="">ทุกเครื่อง</option></select><select id="fishbone_filterWaste" onchange="renderFishboneTable(getRecords())"><option value="">ทุกประเภท</option></select><input type="text" id="fishbone_search" placeholder="ค้นหา..." oninput="renderFishboneTable(getRecords())"><button class="btn btn-secondary btn-sm" onclick="document.getElementById('fishbone_filterMachine').value='';document.getElementById('fishbone_filterWaste').value='';document.getElementById('fishbone_search').value='';renderFishboneTable(getRecords())">ล้าง</button></div><div style="background:var(--surface2);border-radius:8px;padding:10px;margin-bottom:10px;border-left:3px solid #2980b9"><div style="font-size:12px;font-weight:600;color:#2980b9;margin-bottom:4px">สาเหตุที่พบบ่อยสุด</div><div id="fishboneSummary"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-title">&#x1F4CB; Audit Log</div>
+        <div style="display:flex;justify-content:flex-end;margin-bottom:8px">
+          <button class="btn btn-danger btn-sm" onclick="clearAuditLog()">🗑 ล้างทั้งหมด</button>
+        </div>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr><th>เวลา</th><th>ผู้ใช้</th><th>การกระทำ</th><th>รายละเอียด</th><th>จัดการ</th></tr>
+            </thead>
+            <tbody id="auditTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- REPORT TAB -->
+    <div class="tab-panel" id="panel-report">
+      <div class="card">
+        <div class="card-title">📄 สร้างรายงาน</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>ช่วงเวลา</label>
+            <select id="rpt_period" onchange="updateReportDates()">
+              <option value="today">วันนี้</option>
+              <option value="week">สัปดาห์นี้</option>
+              <option value="month" selected>เดือนนี้</option>
+              <option value="custom">กำหนดเอง</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>จากวันที่</label>
+            <input type="date" id="rpt_from">
+          </div>
+          <div class="form-group">
+            <label>ถึงวันที่</label>
+            <input type="date" id="rpt_to">
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="generateReport()">📊 สร้างรายงาน</button>
+          <button class="btn btn-secondary" onclick="printReport()">🖨 พิมพ์</button>
+        </div>
+      </div>
+      <div id="reportOutput"></div>
+    </div>
+
+    <!-- SETTINGS TAB -->
+    <div class="tab-panel" id="panel-settings">
+      <!-- Settings Header -->
+      <div style="margin-bottom:20px">
+        <h2 style="font-size:20px;font-weight:700;color:var(--text)">⚙️ ตั้งค่าระบบ</h2>
+        <p style="font-size:13px;color:var(--text2);margin-top:4px">จัดการการตั้งค่าทั้งหมดของระบบ HDPE Waste Tracker</p>
+      </div>
+
+      <!-- Row 1: Target + OEE + PIN -->
+      <div class="grid-3" style="margin-bottom:16px">
+        <!-- Target -->
+        <div class="card" style="border-top:3px solid #c0392b">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+            <div style="width:36px;height:36px;background:rgba(192,57,43,0.15);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px">🎯</div>
+            <div>
+              <div style="font-weight:700;font-size:14px">เป้าหมายของเสีย</div>
+              <div style="font-size:11px;color:var(--text2)">ตั้งค่า target rate</div>
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:10px">
+            <label>เป้าหมายรวม (%)</label>
+            <input type="number" id="cfg_target" value="3" min="0.1" max="100" step="0.1">
+          </div>
+          <div style="font-size:11px;color:var(--text2);margin-bottom:8px;font-weight:600">เป้าหมายรายเครื่อง</div>
+          <div id="machineTargetInputs" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:6px;margin-bottom:10px"></div>
+          <button class="btn btn-primary btn-sm" onclick="saveConfig()" style="width:100%">💾 บันทึก</button>
+        </div>
+
+        <!-- OEE -->
+        <div class="card" style="border-top:3px solid #2980b9">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+            <div style="width:36px;height:36px;background:rgba(41,128,185,0.15);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px">⚙️</div>
+            <div>
+              <div style="font-weight:700;font-size:14px">OEE Dashboard</div>
+              <div style="font-size:11px;color:var(--text2)">ชั่วโมงการผลิต</div>
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:10px">
+            <label>ชั่วโมงต่อกะ</label>
+            <input type="number" id="cfg_plannedHrs" value="8" min="1" max="24">
+          </div>
+          <div class="form-group" style="margin-bottom:10px">
+            <label>Performance เริ่มต้น (%)</label>
+            <input type="number" id="cfg_performance" value="85" min="1" max="100">
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="saveConfig()" style="width:100%">💾 บันทึก</button>
+        </div>
+
+        <!-- PIN -->
+        <div class="card" style="border-top:3px solid #27ae60">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+            <div style="width:36px;height:36px;background:rgba(39,174,96,0.15);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px">🔑</div>
+            <div>
+              <div style="font-weight:700;font-size:14px">เปลี่ยน PIN</div>
+              <div style="font-size:11px;color:var(--text2)">ความปลอดภัย</div>
+            </div>
+          </div>
+          <div class="form-group" style="margin-bottom:10px">
+            <label>PIN ปัจจุบัน</label>
+            <input type="password" id="cfg_oldPin" placeholder="••••">
+          </div>
+          <div class="form-group" style="margin-bottom:10px">
+            <label>PIN ใหม่</label>
+            <input type="password" id="cfg_newPin" placeholder="••••">
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="changePin()" style="width:100%">🔑 เปลี่ยน PIN</button>
+        </div>
+      </div>
+
+      <!-- Row 2: Theme + Logo + Users -->
+      <div class="grid-3" style="margin-bottom:16px">
+        <!-- Theme -->
+        <div class="card" style="border-top:3px solid #8e44ad">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+            <div style="width:36px;height:36px;background:rgba(142,68,173,0.15);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px">🌙</div>
+            <div>
+              <div style="font-weight:700;font-size:14px">ธีม</div>
+              <div style="font-size:11px;color:var(--text2)">Dark / Light mode</div>
+            </div>
+          </div>
+          <button class="btn btn-secondary" onclick="toggleTheme()" style="width:100%;margin-bottom:10px">🌓 สลับ Dark/Light</button>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;cursor:pointer;padding:8px;background:var(--surface2);border-radius:6px;border:1px solid var(--border)">
+            <input type="checkbox" id="cfg_autoTheme" onchange="saveConfig()">
+            <span>สลับธีมอัตโนมัติตามกะ</span>
+          </label>
+        </div>
+
+        <!-- Logo -->
+        <div class="card" style="border-top:3px solid #f39c12">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+            <div style="width:36px;height:36px;background:rgba(243,156,18,0.15);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px">🖼</div>
+            <div>
+              <div style="font-weight:700;font-size:14px">โลโก้บริษัท</div>
+              <div style="font-size:11px;color:var(--text2)">JPG, PNG, SVG</div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div style="text-align:center">
+              <div style="font-size:11px;color:var(--text2);margin-bottom:6px;font-weight:600">โลโก้ที่ 1</div>
+              <div style="height:50px;background:var(--surface2);border-radius:6px;border:1px dashed var(--border);display:flex;align-items:center;justify-content:center;margin-bottom:6px;overflow:hidden">
+                <img id="previewLogo" src="" alt="" style="max-height:48px;max-width:100%;display:none;border-radius:4px">
+                <span id="previewLogo_placeholder" style="font-size:20px">🏭</span>
+              </div>
+              <div style="display:flex;gap:4px;justify-content:center">
+                <label class="btn btn-secondary btn-sm" style="cursor:pointer;font-size:11px">📁<input type="file" accept="image/*" onchange="uploadLogo(event,1)" style="display:none"></label>
+                <button class="btn btn-danger btn-sm" onclick="removeLogo(1)" style="font-size:11px">🗑</button>
+              </div>
+            </div>
+            <div style="text-align:center">
+              <div style="font-size:11px;color:var(--text2);margin-bottom:6px;font-weight:600">โลโก้ที่ 2</div>
+              <div style="height:50px;background:var(--surface2);border-radius:6px;border:1px dashed var(--border);display:flex;align-items:center;justify-content:center;margin-bottom:6px;overflow:hidden">
+                <img id="previewLogo2" src="" alt="" style="max-height:48px;max-width:100%;display:none;border-radius:4px">
+                <span id="previewLogo2_placeholder" style="font-size:20px">🏭</span>
+              </div>
+              <div style="display:flex;gap:4px;justify-content:center">
+                <label class="btn btn-secondary btn-sm" style="cursor:pointer;font-size:11px">📁<input type="file" accept="image/*" onchange="uploadLogo(event,2)" style="display:none"></label>
+                <button class="btn btn-danger btn-sm" onclick="removeLogo(2)" style="font-size:11px">🗑</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Users -->
+        <div class="card" style="border-top:3px solid #16a085">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+            <div style="width:36px;height:36px;background:rgba(22,160,133,0.15);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px">👥</div>
+            <div>
+              <div style="font-weight:700;font-size:14px">จัดการผู้ใช้</div>
+              <div style="font-size:11px;color:var(--text2)">Admin / Operator / Viewer</div>
+            </div>
+          </div>
+          <div id="usersList" style="margin-bottom:10px;max-height:160px;overflow-y:auto"></div>
+          <button class="btn btn-primary btn-sm" onclick="showAddUserModal()" style="width:100%">+ เพิ่มผู้ใช้</button>
+        </div>
+      </div>
+
+      <!-- Row 3: Schedule + Data + Summary -->
+      <div class="grid-3" style="margin-bottom:16px">
+        <!-- Schedule -->
+        <div class="card" style="border-top:3px solid #d35400">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+            <div style="width:36px;height:36px;background:rgba(211,84,0,0.15);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px">📅</div>
+            <div>
+              <div style="font-weight:700;font-size:14px">ตารางเวร</div>
+              <div style="font-size:11px;color:var(--text2)">กำหนดพนักงานต่อกะ</div>
+            </div>
+          </div>
+          <div class="form-row" style="margin-bottom:8px">
+            <div class="form-group">
+              <label>วันที่</label>
+              <input type="date" id="sch_date">
+            </div>
+            <div class="form-group">
+              <label>เครื่อง</label>
+              <select id="sch_machine"></select>
+            </div>
+          </div>
+          <div class="form-row" style="margin-bottom:8px">
+            <div class="form-group">
+              <label>กะ</label>
+              <select id="sch_shift">
+                <option value="เช้า">เช้า</option>
+                <option value="บ่าย">บ่าย</option>
+                <option value="ดึก">ดึก</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>ชื่อพนักงาน</label>
+              <input type="text" id="sch_operator" placeholder="ชื่อพนักงาน">
+            </div>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="saveSchedule()" style="width:100%;margin-bottom:8px">💾 บันทึกตารางเวร</button>
+          <div id="scheduleList" style="max-height:120px;overflow-y:auto"></div>
+        </div>
+
+        <!-- Data Management -->
+        <div class="card" style="border-top:3px solid #7f8c8d">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+            <div style="width:36px;height:36px;background:rgba(127,140,141,0.15);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px">💾</div>
+            <div>
+              <div style="font-weight:700;font-size:14px">จัดการข้อมูล</div>
+              <div style="font-size:11px;color:var(--text2)">Backup & Restore</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <button class="btn btn-secondary" onclick="backupJSON()" style="width:100%;text-align:left">💾 Backup JSON</button>
+            <button class="btn btn-secondary" onclick="document.getElementById('restoreFile').click()" style="width:100%;text-align:left">📂 Restore JSON</button>
+            <input type="file" id="restoreFile" accept=".json" style="display:none" onchange="restoreJSON(event)">
+            <button class="btn btn-secondary" onclick="cleanOldData()" style="width:100%;text-align:left">🧹 ล้างข้อมูลเก่า (>90 วัน)</button>
+            <div style="border-top:1px solid var(--border);padding-top:8px;margin-top:2px">
+              <button class="btn btn-danger" onclick="clearAllData()" style="width:100%;text-align:left">🗑 ล้างข้อมูลทั้งหมด</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Summary Canvas -->
+        <div class="card" style="border-top:3px solid #2c3e50">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+            <div style="width:36px;height:36px;background:rgba(44,62,80,0.15);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:18px">📊</div>
+            <div>
+              <div style="font-weight:700;font-size:14px">สรุปภาพรวม</div>
+              <div style="font-size:11px;color:var(--text2)">บันทึกเป็นรูปภาพ</div>
+            </div>
+          </div>
+          <canvas id="summaryCanvas" height="160" style="border-radius:8px;border:1px solid var(--border);width:100%"></canvas>
+          <button class="btn btn-secondary btn-sm" onclick="saveSummaryImage()" style="width:100%;margin-top:8px">💾 บันทึกรูป</button>
+        </div>
+      </div>
+    </div>
+  </div><!-- end mainContent -->
+</div><!-- end app -->
+
+<!-- MODALS -->
+<div class="modal-overlay" id="editModal" style="display:none">
+  <div class="modal-box">
+    <div class="modal-title">✏️ แก้ไขข้อมูล</div>
+    <div id="editModalBody"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('editModal')">ยกเลิก</button>
+      <button class="btn btn-primary" onclick="saveEditRecord()">💾 บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="pinModal" style="display:none">
+  <div class="modal-box" style="max-width:320px;text-align:center">
+    <div class="modal-title">🔑 ยืนยัน PIN</div>
+    <div class="pin-display" id="pinModalDisplay" style="background:var(--surface2);color:var(--text)">••••</div>
+    <div class="numpad" style="margin-top:12px">
+      <button onclick="pinModalPress('1')">1</button>
+      <button onclick="pinModalPress('2')">2</button>
+      <button onclick="pinModalPress('3')">3</button>
+      <button onclick="pinModalPress('4')">4</button>
+      <button onclick="pinModalPress('5')">5</button>
+      <button onclick="pinModalPress('6')">6</button>
+      <button onclick="pinModalPress('7')">7</button>
+      <button onclick="pinModalPress('8')">8</button>
+      <button onclick="pinModalPress('9')">9</button>
+      <button onclick="pinModalPress('clear')" style="color:#f39c12">C</button>
+      <button onclick="pinModalPress('0')">0</button>
+      <button onclick="pinModalPress('back')" style="color:#e74c3c">⌫</button>
+    </div>
+    <div class="login-error" id="pinModalError"></div>
+    <div class="modal-footer" style="justify-content:center">
+      <button class="btn btn-secondary" onclick="closeModal('pinModal')">ยกเลิก</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="addUserModal" style="display:none">
+  <div class="modal-box" style="max-width:400px">
+    <div class="modal-title">👤 เพิ่ม/แก้ไขผู้ใช้</div>
+    <input type="hidden" id="editUserId">
+    <div class="form-group" style="margin-bottom:10px">
+      <label>ชื่อผู้ใช้</label>
+      <input type="text" id="usr_name" placeholder="ชื่อผู้ใช้">
+    </div>
+    <div class="form-group" style="margin-bottom:10px">
+      <label>บทบาท</label>
+      <select id="usr_role">
+        <option value="admin">Admin</option>
+        <option value="operator">Operator</option>
+        <option value="viewer">Viewer</option>
+      </select>
+    </div>
+    <div class="form-group" style="margin-bottom:10px">
+      <label>PIN</label>
+      <input type="password" id="usr_pin" placeholder="PIN 4 หลัก">
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('addUserModal')">ยกเลิก</button>
+      <button class="btn btn-primary" onclick="saveUser()">💾 บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="importCSVModal" style="display:none">
+  <div class="modal-box">
+    <div class="modal-title">📤 Import CSV</div>
+    <div class="form-group" style="margin-bottom:12px">
+      <label>เลือกไฟล์ CSV</label>
+      <input type="file" id="csvFile" accept=".csv" onchange="previewCSV(event)">
+    </div>
+    <div id="csvPreview"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('importCSVModal')">ยกเลิก</button>
+      <button class="btn btn-primary" id="confirmImportBtn" onclick="confirmImportCSV()" style="display:none">✅ นำเข้า</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="historyModal" style="display:none">
+  <div class="modal-box" style="max-width:600px">
+    <div class="modal-title">📜 ประวัติการแก้ไขรายการ</div>
+    <div id="historyModalBody"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('historyModal')">ปิด</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="fishboneModal" style="display:none">
+  <div class="modal-box" style="max-width:900px">
+    <div class="modal-title">🐟 Fishbone Diagram (5M1E)</div>
+    <div id="fishboneInfo" style="font-size:13px;color:var(--text2);margin-bottom:12px"></div>
+    <canvas id="fishboneCanvas" style="width:100%;border-radius:8px;background:#fff"></canvas>
+    <div class="modal-footer">
+      <button class="btn btn-secondary btn-sm" onclick="saveFishboneImage()">💾 บันทึกรูป</button>
+      <button class="btn btn-secondary" onclick="closeModal('fishboneModal')">ปิด</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="recipeEditModal" style="display:none">
+  <div class="modal-box" style="max-width:500px">
+    <div class="modal-title">✏️ แก้ไขสูตร</div>
+    <input type="hidden" id="editRecipeId">
+    <div id="recipeEditBody"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal('recipeEditModal')">ยกเลิก</button>
+      <button class="btn btn-primary" onclick="saveEditRecipe()">💾 บันทึก</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== CONSTANTS =====
+const MACHINE_LIST = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,21];
+const WASTE_TYPES = ['จุดดำ','ฟิล์มขาด','ความหนาไม่สม่ำเสมอ','สีผิดปกติ','รอยย่น','ฟองอากาศ','อื่นๆ'];
+const MAINTENANCE_TASKS = [
+  {key:'screen', label:'เปลี่ยนตะแกรง', intervalDays:7},
+  {key:'die', label:'ทำความสะอาดหัวดาย', intervalDays:7},
+  {key:'fan', label:'ทำความสะอาดจานลม', intervalHours:4}
+];
+const STORAGE = {
+  records:'hdpe_records_v2', maintenance:'hdpe_maintenance_v1', config:'hdpe_config',
+  pin:'hdpe_pin', theme:'hdpe_theme', session:'hdpe_session', templates:'hdpe_templates',
+  audit:'hdpe_audit', recipes:'hdpe_recipes', downtime:'hdpe_downtime',
+  users:'hdpe_users', schedule:'hdpe_schedule', activeSessions:'hdpe_active_sessions', logo:'hdpe_logo', logo2:'hdpe_logo2'
+};
+
+// ===== STATE =====
+let currentUser = null;
+let pinBuffer = '';
+let pinModalBuffer = '';
+let pinModalCallback = null;
+let editingRecordId = null;
+let recordsPage = 1;
+let recordsSortKey = 'date';
+let recordsSortDir = -1;
+let filteredRecords = [];
+let tvInterval = null;
+let csvImportData = [];
+let autoThemeInterval = null;
+
+// ===== JSONBIN CONFIG =====
+const JBIN = {
+  apiKey: '$2a$10$LP7r4Sxg5.vjenZeJmDp2e3lQg0jwMYYnmjvkPAsfKFfnUa0uLX/.',
+  binId: '69e6fb4a36566621a8d5891b',
+  url: 'https://api.jsonbin.io/v3/b/69e6fb4a36566621a8d5891b'
+};
+let syncStatus = 'idle'; // idle | syncing | error
+let syncTimeout = null;
+
+async function cloudPush() {
+  try {
+    setSyncStatus('syncing');
+    const data = {};
+    Object.entries(STORAGE).forEach(([k,v]) => {
+      // ไม่ส่งโลโก้และ session ขึ้น cloud เพราะมีขนาดใหญ่และไม่จำเป็น
+      if (k==='logo' || k==='logo2' || k==='session') return;
+      data[k] = load(v, null);
+    });
+    // Check data size (JSONBin free limit ~100KB)
+    const size = JSON.stringify(data).length;
+    if (size > 90000) {
+      showToast(`⚠️ ข้อมูลใกล้เต็ม (${(size/1024).toFixed(1)}KB/100KB) ควร Backup แล้วล้างข้อมูลเก่า`, 'warn', 8000);
+    }
+    const res = await fetch(JBIN.url, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'X-Access-Key': JBIN.apiKey },
+      body: JSON.stringify(data)
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    setSyncStatus('ok');
+  } catch(e) {
+    setSyncStatus('error');
+    showToast('⚠️ Sync ล้มเหลว — ข้อมูลบันทึกในเครื่องแล้ว กรุณาตรวจสอบอินเทอร์เน็ต', 'warn', 5000);
+    console.warn('Cloud sync failed:', e);
+  }
+}
+
+async function cloudPull() {
+  try {
+    setSyncStatus('syncing');
+    const res = await fetch(JBIN.url + '/latest', {
+      headers: { 'X-Access-Key': JBIN.apiKey }
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const json = await res.json();
+    const data = json.record || {};
+    Object.entries(STORAGE).forEach(([k,v]) => {
+      if (data[k] !== undefined && data[k] !== null) {
+        localStorage.setItem(v, JSON.stringify(data[k]));
+      }
+    });
+    setSyncStatus('ok');
+    return true;
+  } catch(e) {
+    setSyncStatus('error');
+    console.warn('Cloud pull failed:', e);
+    return false;
+  }
+}
+
+function schedulePush() {
+  if (syncTimeout) clearTimeout(syncTimeout);
+  syncTimeout = setTimeout(cloudPush, 1500);
+}
+
+function setSyncStatus(status) {
+  syncStatus = status;
+  const el = document.getElementById('syncStatus');
+  if (!el) return;
+  const map = {
+    syncing: '<span style="animation:spin 1s linear infinite;display:inline-block">🔄</span> กำลัง sync...',
+    ok: '☁️ Sync แล้ว',
+    error: '⚠️ Sync ล้มเหลว',
+    idle: '☁️'
+  };
+  el.innerHTML = map[status] || '';
+  el.style.color = status === 'error' ? '#e74c3c' : status === 'ok' ? '#27ae60' : '#f39c12';
+}
+
+// ===== STORAGE HELPERS =====
+function load(key, def) {
+  try { const v = localStorage.getItem(key); return v ? JSON.parse(v) : def; } catch(e) { return def; }
+}
+function save(key, val) {
+  try {
+    localStorage.setItem(key, JSON.stringify(val));
+    // push to cloud after save (debounced)
+    schedulePush();
+  } catch(e) {}
+}
+
+// ===== CONFIG =====
+function getConfig() {
+  return load(STORAGE.config, {target:3, plannedHrs:8, performance:85, autoTheme:false});
+}
+function saveConfig() {
+  const cfg = getConfig();
+  cfg.target = parseFloat(document.getElementById('cfg_target').value) || 3;
+  cfg.plannedHrs = parseInt(document.getElementById('cfg_plannedHrs').value) || 8;
+  cfg.performance = parseFloat(document.getElementById('cfg_performance').value) || 85;
+  cfg.autoTheme = document.getElementById('cfg_autoTheme').checked;
+  // Save per-machine targets
+  cfg.machineTargets = cfg.machineTargets || {};
+  MACHINE_LIST.forEach(m => {
+    const el = document.getElementById('cfg_target_m'+m);
+    if (el) cfg.machineTargets[m] = parseFloat(el.value) || null;
+  });
+  save(STORAGE.config, cfg);
+  showToast('บันทึกการตั้งค่าแล้ว','success');
+  setupAutoTheme();
+}
+function getMachineTarget(machine) {
+  const cfg = getConfig();
+  return (cfg.machineTargets && cfg.machineTargets[machine]) || cfg.target || 3;
+}
+function loadConfigUI() {
+  const cfg = getConfig();
+  document.getElementById('cfg_target').value = cfg.target;
+  document.getElementById('cfg_plannedHrs').value = cfg.plannedHrs;
+  document.getElementById('cfg_performance').value = cfg.performance;
+  document.getElementById('cfg_autoTheme').checked = cfg.autoTheme;
+  renderNotificationStatus();
+  document.getElementById('targetDisplay').textContent = cfg.target + '%';
+  // Render per-machine target inputs
+  const wrap = document.getElementById('machineTargetInputs');
+  if (wrap) {
+    wrap.innerHTML = MACHINE_LIST.map(m => `
+      <div>
+        <label style="font-size:11px;color:var(--text2)">เครื่อง ${m}</label>
+        <input type="number" id="cfg_target_m${m}" value="${(cfg.machineTargets&&cfg.machineTargets[m])||''}" placeholder="${cfg.target}" min="0.1" max="100" step="0.1" style="width:100%">
+      </div>`).join('');
+  }
+}
+
+// ===== USERS =====
+function getUsers() {
+  return load(STORAGE.users, [{id:'1',name:'Admin',role:'admin',pin:'1988'}]);
+}
+function saveUsers(users) {
+  save(STORAGE.users, users);
+  // force immediate push when users change
+  if (syncTimeout) clearTimeout(syncTimeout);
+  cloudPush();
+}
+function renderUsersList() {
+  const users = getUsers();
+  const el = document.getElementById('usersList');
+  if (!el) return;
+  el.innerHTML = users.map(u => `
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px;background:var(--surface2);border-radius:6px;margin-bottom:6px;border:1px solid var(--border)">
+      <div>
+        <span style="font-weight:600">${u.name}</span>
+        <span style="margin-left:8px;font-size:11px;padding:2px 6px;border-radius:10px;background:${u.role==='admin'?'#c0392b':u.role==='operator'?'#2980b9':'#27ae60'};color:#fff">${u.role}</span>
+      </div>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-secondary btn-sm" onclick="editUser('${u.id}')">✏️</button>
+        ${u.id!=='1'?`<button class="btn btn-danger btn-sm" onclick="deleteUser('${u.id}')">🗑</button>`:''}
+      </div>
+    </div>`).join('');
+}
+function showAddUserModal(id) {
+  document.getElementById('editUserId').value = id || '';
+  document.getElementById('usr_name').value = '';
+  document.getElementById('usr_role').value = 'operator';
+  document.getElementById('usr_pin').value = '';
+  if (id) {
+    const u = getUsers().find(x=>x.id===id);
+    if (u) { document.getElementById('usr_name').value=u.name; document.getElementById('usr_role').value=u.role; }
+  }
+  document.getElementById('addUserModal').style.display='flex';
+}
+function editUser(id) { showAddUserModal(id); }
+function deleteUser(id) {
+  if (!canDo('admin')) { showToast('ต้องการสิทธิ์ Admin','error'); return; }
+  requirePin(()=>{
+    const users = getUsers().filter(u=>u.id!==id);
+    saveUsers(users); renderUsersList(); showToast('ลบผู้ใช้แล้ว','success');
+  });
+}
+function saveUser() {
+  const id = document.getElementById('editUserId').value;
+  const name = document.getElementById('usr_name').value.trim();
+  const role = document.getElementById('usr_role').value;
+  const pin = document.getElementById('usr_pin').value.trim();
+  if (!name) { showToast('กรุณาใส่ชื่อผู้ใช้','error'); return; }
+  const users = getUsers();
+  if (id) {
+    const u = users.find(x=>x.id===id);
+    if (u) { u.name=name; u.role=role; if(pin) u.pin=pin; }
+  } else {
+    if (!pin) { showToast('กรุณาใส่ PIN','error'); return; }
+    users.push({id:Date.now().toString(), name, role, pin});
+  }
+  saveUsers(users); renderUsersList(); closeModal('addUserModal');
+  showToast('บันทึกผู้ใช้แล้ว','success');
+}
+
+// ===== AUTH =====
+function numpadPress(v) {
+  if (v==='clear') { pinBuffer=''; }
+  else if (v==='back') { pinBuffer=pinBuffer.slice(0,-1); }
+  else if (pinBuffer.length<4) { pinBuffer+=v; }
+  updatePinDisplay();
+  if (pinBuffer.length===4) setTimeout(doLogin,200);
+}
+function updatePinDisplay() {
+  const d = document.getElementById('pinDisplay');
+  if (d) d.textContent = '•'.repeat(pinBuffer.length) + '◦'.repeat(4-pinBuffer.length);
+}
+async function doLogin() {
+  const username = document.getElementById('loginUsername').value.trim();
+  const users = getUsers();
+  let user = null;
+  if (username) {
+    user = users.find(u => u.name.toLowerCase()===username.toLowerCase() && u.pin===pinBuffer);
+  } else {
+    user = users.find(u => u.pin===pinBuffer);
+  }
+
+  // ถ้าหาไม่เจอ ลอง pull จาก cloud ก่อน (อาจมี user ใหม่ที่ยังไม่ sync)
+  if (!user) {
+    document.getElementById('loginError').textContent='กำลังตรวจสอบ...';
+    await cloudPull();
+    const freshUsers = getUsers();
+    if (username) {
+      user = freshUsers.find(u => u.name.toLowerCase()===username.toLowerCase() && u.pin===pinBuffer);
+    } else {
+      user = freshUsers.find(u => u.pin===pinBuffer);
+    }
+  }
+
+  if (user) {
+    currentUser = user;
+    save(STORAGE.session, {user, ts: Date.now()});
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('app').style.display='block';
+    document.getElementById('headerUser').textContent = `👤 ${user.name} (${user.role})`;
+    pinBuffer='';
+    updatePinDisplay();
+    document.getElementById('loginError').textContent='';
+
+    // Register this session and check for duplicate logins
+    const deviceId = getDeviceId();
+    await registerSession(user.name, deviceId);
+    await checkDuplicateSession(user.name, deviceId);
+
+    initApp();
+  } else {
+    document.getElementById('loginError').textContent='PIN หรือชื่อผู้ใช้ไม่ถูกต้อง';
+    pinBuffer='';
+    updatePinDisplay();
+  }
+}
+function doLogout() {
+  if (!confirm('ต้องการออกจากระบบใช่ไหม?')) return;
+  const deviceId = getDeviceId();
+  if (currentUser) removeSession(currentUser.name, deviceId);
+  currentUser=null; save(STORAGE.session,null);
+  document.getElementById('app').style.display='none';
+  document.getElementById('loginScreen').style.display='flex';
+  pinBuffer=''; updatePinDisplay();
+}
+function checkSession() {
+  const s = load(STORAGE.session, null);
+  if (s && s.ts && (Date.now()-s.ts)<8*3600*1000 && s.user) {
+    currentUser=s.user;
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('app').style.display='block';
+    document.getElementById('headerUser').textContent=`👤 ${s.user.name} (${s.user.role})`;
+    initApp();
+  }
+}
+function canDo(action) {
+  if (!currentUser) return false;
+  if (currentUser.role==='admin') return true;
+  if (action==='view') return true;
+  if (action==='add' || action==='edit') return currentUser.role==='operator';
+  return false;
+}
+
+// ===== PIN MODAL =====
+function requirePin(cb) {
+  pinModalBuffer=''; pinModalCallback=cb;
+  document.getElementById('pinModalDisplay').textContent='◦◦◦◦';
+  document.getElementById('pinModalError').textContent='';
+  document.getElementById('pinModal').style.display='flex';
+}
+function pinModalPress(v) {
+  if (v==='clear') pinModalBuffer='';
+  else if (v==='back') pinModalBuffer=pinModalBuffer.slice(0,-1);
+  else if (pinModalBuffer.length<4) pinModalBuffer+=v;
+  document.getElementById('pinModalDisplay').textContent='•'.repeat(pinModalBuffer.length)+'◦'.repeat(4-pinModalBuffer.length);
+  if (pinModalBuffer.length===4) setTimeout(checkPinModal,200);
+}
+function checkPinModal() {
+  const pin = load(STORAGE.pin,'1988');
+  const users = getUsers();
+  const valid = users.some(u=>u.pin===pinModalBuffer) || pinModalBuffer===pin;
+  if (valid) {
+    closeModal('pinModal');
+    if (pinModalCallback) pinModalCallback();
+    pinModalCallback=null;
+  } else {
+    document.getElementById('pinModalError').textContent='PIN ไม่ถูกต้อง';
+    pinModalBuffer='';
+    document.getElementById('pinModalDisplay').textContent='◦◦◦◦';
+  }
+}
+function changePin() {
+  const oldPin = document.getElementById('cfg_oldPin').value;
+  const newPin = document.getElementById('cfg_newPin').value;
+  const storedPin = load(STORAGE.pin,'1988');
+  if (oldPin!==storedPin) { showToast('PIN เดิมไม่ถูกต้อง','error'); return; }
+  if (newPin.length<4) { showToast('PIN ใหม่ต้องมีอย่างน้อย 4 หลัก','error'); return; }
+  save(STORAGE.pin, newPin);
+  const users = getUsers();
+  const admin = users.find(u=>u.id==='1');
+  if (admin) { admin.pin=newPin; saveUsers(users); }
+  showToast('เปลี่ยน PIN สำเร็จ','success');
+  document.getElementById('cfg_oldPin').value='';
+  document.getElementById('cfg_newPin').value='';
+}
+
+// ===== THEME =====
+function toggleTheme() {
+  const cur = document.documentElement.getAttribute('data-theme');
+  const next = cur==='dark'?'light':'dark';
+  document.documentElement.setAttribute('data-theme', next);
+  save(STORAGE.theme, next);
+  document.getElementById('themeBtn').textContent = next==='dark'?'☀️':'🌙';
+}
+function applyTheme(t) {
+  document.documentElement.setAttribute('data-theme', t||'light');
+  document.getElementById('themeBtn').textContent = t==='dark'?'☀️':'🌙';
+}
+function setupAutoTheme() {
+  if (autoThemeInterval) clearInterval(autoThemeInterval);
+  const cfg = getConfig();
+  if (!cfg.autoTheme) return;
+  function checkTheme() {
+    const h = new Date().getHours();
+    const isDark = h>=22 || h<6;
+    applyTheme(isDark?'dark':'light');
+    save(STORAGE.theme, isDark?'dark':'light');
+  }
+  checkTheme();
+  autoThemeInterval = setInterval(checkTheme, 60000);
+}
+
+// ===== TOAST =====
+function showToast(msg, type='info', dur=3000) {
+  const c = document.getElementById('toastContainer');
+  const t = document.createElement('div');
+  t.className = `toast toast-${type}`;
+  t.textContent = msg;
+  c.appendChild(t);
+  setTimeout(()=>{ t.style.opacity='0'; t.style.transition='opacity .3s'; setTimeout(()=>t.remove(),300); }, dur);
+}
+
+// ===== TABS =====
+function switchTab(name) {
+  // ถ้ากำลังอยู่หน้าบันทึกและมีข้อมูลค้าง ให้เตือนก่อน
+  const activePanel = document.querySelector('.tab-panel.active');
+  if (activePanel && activePanel.id === 'panel-record' && name !== 'record') {
+    const orderId = document.getElementById('f_orderId')?.value;
+    const prodQty = document.getElementById('f_prodQty')?.value;
+    if (orderId || prodQty > 0) {
+      if (!confirm('มีข้อมูลที่ยังไม่ได้บันทึก ต้องการออกจากหน้านี้ไหม?')) return;
+    }
+  }
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  const panel = document.getElementById('panel-'+name);
+  if (panel) panel.classList.add('active');
+  const btns = document.querySelectorAll('.tab-btn');
+  btns.forEach(b=>{ if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes("'"+name+"'")) b.classList.add('active'); });
+  if (name==='dashboard') { renderDashboard(); }
+  if (name==='records') { renderRecordsTable(); }
+  if (name==='maintenance') { renderMaintenance(); }
+  if (name==='analysis') { renderAnalysis(); }
+  if (name==='report') { updateReportDates(); }
+  if (name==='settings') { loadConfigUI(); renderUsersList(); renderScheduleList(); renderSummaryCanvas(); }
+  if (name==='recipe') { renderRecipeList(); }
+  if (name==='downtime') { renderDowntimeTable(); }
+}
+function closeModal(id) { document.getElementById(id).style.display='none'; }
+
+// ===== RECORDS =====
+function getRecords() { return load(STORAGE.records, []); }
+function saveRecords(r) { save(STORAGE.records, r); }
+function genId() { return Date.now().toString(36)+Math.random().toString(36).slice(2,6); }
+
+function getFormData() {
+  return {
+    id: genId(), date: document.getElementById('f_date').value,
+    orderId: document.getElementById('f_orderId').value.trim(),
+    machine: parseInt(document.getElementById('f_machine').value)||0,
+    shift: document.getElementById('f_shift').value,
+    responsible: document.getElementById('f_responsible').value.trim(),
+    supplier: document.getElementById('f_supplier').value.trim(),
+    lotNo: document.getElementById('f_lotNo').value.trim(),
+    materialType: document.getElementById('f_materialType').value.trim(),
+    bagSize: document.getElementById('f_bagSize').value==='custom'?document.getElementById('f_bagCustom').value:document.getElementById('f_bagSize').value,
+    thickness: parseFloat(document.getElementById('f_thickness').value)||0,
+    zone1: parseFloat(document.getElementById('f_zone1').value)||0,
+    zone2: parseFloat(document.getElementById('f_zone2').value)||0,
+    zone3: parseFloat(document.getElementById('f_zone3').value)||0,
+    flangeTemp: parseFloat(document.getElementById('f_flangeTemp').value)||0,
+    dieTemp: parseFloat(document.getElementById('f_dieTemp').value)||0,
+    screwMotor: parseFloat(document.getElementById('f_screwMotor').value)||0,
+    thickMotor: parseFloat(document.getElementById('f_thickMotor').value)||0,
+    wasteType: document.getElementById('f_wasteType').value,
+    prodQty: parseFloat(document.getElementById('f_prodQty').value)||0,
+    wasteQty: parseFloat(document.getElementById('f_wasteQty').value)||0,
+    wasteRate: calcWasteRate(parseFloat(document.getElementById('f_prodQty').value)||0, parseFloat(document.getElementById('f_wasteQty').value)||0),
+    cause: document.getElementById('f_cause').value.trim(),
+    solution: document.getElementById('f_solution').value.trim(),
+    why1: document.getElementById('f_why1').value.trim(),
+    why2: document.getElementById('f_why2').value.trim(),
+    why3: document.getElementById('f_why3').value.trim(),
+    why4: document.getElementById('f_why4').value.trim(),
+    why5: document.getElementById('f_why5').value.trim(),
+    rootCause: document.getElementById('f_rootCause').value.trim(),
+    m5_man: document.getElementById('f_5m_man').value.trim(),
+    m5_machine: document.getElementById('f_5m_machine').value.trim(),
+    m5_material: document.getElementById('f_5m_material').value.trim(),
+    m5_method: document.getElementById('f_5m_method').value.trim(),
+    m5_measurement: document.getElementById('f_5m_measurement').value.trim(),
+    m5_environment: document.getElementById('f_5m_environment').value.trim(),
+    m5_problem: document.getElementById('f_5m_problem').value.trim(),
+    createdBy: currentUser?currentUser.name:'',
+    createdAt: new Date().toISOString()
+  };
+}
+function calcWasteRate(prod, waste) {
+  if (!prod || prod<=0) return 0;
+  return Math.round((waste/prod)*10000)/100;
+}
+function saveRecord() {
+  if (!canDo('add')) { showToast('ไม่มีสิทธิ์บันทึกข้อมูล','error'); return; }
+  const r = getFormData();
+  if (!r.date||!r.machine||!r.prodQty) { showToast('กรุณากรอกข้อมูลที่จำเป็น (วันที่, เครื่อง, ผลผลิต)','error'); return; }
+  // ของเสียต้องไม่เกินผลผลิต
+  if (r.wasteQty > r.prodQty) { showToast('⚠️ ของเสียต้องไม่เกินปริมาณผลผลิต','error'); return; }
+  // วันที่ต้องไม่เป็นอนาคต
+  if (r.date > new Date().toISOString().slice(0,10)) { showToast('⚠️ วันที่ไม่ถูกต้อง (ไม่สามารถบันทึกวันในอนาคต)','error'); return; }
+  // Validate temperatures
+  const temps = [r.zone1,r.zone2,r.zone3,r.flangeTemp,r.dieTemp].filter(v=>v>0);
+  if (temps.some(t=>t<100||t>350)) { showToast('⚠️ อุณหภูมิผิดปกติ ควรอยู่ระหว่าง 100-350°C','warn',4000); }
+  const records = getRecords();
+  records.push(r);
+  saveRecords(records);
+  addAudit('เพิ่มข้อมูล', `เครื่อง ${r.machine} วันที่ ${r.date} ของเสีย ${r.wasteRate}%`, r.id);
+  showToast('บันทึกข้อมูลสำเร็จ','success');
+  const cfg = getConfig();
+  if (r.wasteRate > cfg.target) {
+    playAlert();
+    sendLineNotify(r, cfg);
+  }
+  updateMaintenanceBadge();
+  updateTodayCounter();
+  clearForm();
+}
+function clearForm() {
+  ['f_orderId','f_date','f_responsible','f_supplier','f_lotNo','f_materialType',
+   'f_bagCustom','f_thickness','f_zone1','f_zone2','f_zone3','f_flangeTemp','f_dieTemp',
+   'f_screwMotor','f_thickMotor','f_prodQty','f_wasteQty','f_cause','f_solution',
+   'f_why1','f_why2','f_why3','f_why4','f_why5','f_rootCause',
+   'f_5m_man','f_5m_machine','f_5m_material','f_5m_method','f_5m_measurement','f_5m_environment','f_5m_problem'
+  ].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  document.getElementById('f_date').value = new Date().toISOString().slice(0,10);
+  document.getElementById('tempSuggestion').style.display='none';
+  updateWastePreview();
+}
+function updateWastePreview() {
+  const prod = parseFloat(document.getElementById('f_prodQty').value)||0;
+  const waste = parseFloat(document.getElementById('f_wasteQty').value)||0;
+  const rate = calcWasteRate(prod, waste);
+  const cfg = getConfig();
+  const el = document.getElementById('wasteRateDisplay');
+  const bar = document.getElementById('wasteProgressBar');
+  const tgt = document.getElementById('targetDisplay');
+  if (el) el.textContent = rate.toFixed(2)+'%';
+  if (tgt) tgt.textContent = cfg.target+'%';
+  const pct = Math.min((rate/Math.max(cfg.target*2,1))*100,100);
+  if (bar) { bar.style.width=pct+'%'; bar.style.background=rate>cfg.target?'var(--red)':rate>cfg.target*0.8?'var(--yellow)':'var(--green)'; }
+  if (el) el.style.color = rate>cfg.target?'var(--red)':rate>cfg.target*0.8?'var(--yellow)':'var(--green)';
+}
+function toggleCustomBag() {
+  const v = document.getElementById('f_bagSize').value;
+  document.getElementById('customBagGroup').style.display = v==='custom'?'block':'none';
+}
+
+// ===== TEMPERATURE SUGGESTION =====
+function suggestTemperature() {
+  const thickness = parseFloat(document.getElementById('f_thickness').value) || 0;
+  const el = document.getElementById('tempSuggestion');
+  if (!thickness || thickness <= 0) { el.style.display='none'; return; }
+
+  // ค่าอุณหภูมิแนะนำตามความหนา (ไมครอน)
+  let z1, z2, z3, flange, die, screw, note;
+  if (thickness <= 15) {
+    // บางมาก
+    z1=150; z2=160; z3=165; flange=168; die=170;
+    note = 'ถุงบางมาก — อุณหภูมิต่ำ ระวังฟิล์มขาด';
+  } else if (thickness <= 25) {
+    // บาง
+    z1=155; z2=168; z3=175; flange=178; die=182;
+    note = 'ถุงบาง — มาตรฐานทั่วไป';
+  } else if (thickness <= 35) {
+    // กลาง
+    z1=160; z2=175; z3=182; flange=185; die=190;
+    note = 'ความหนาปกติ — ค่ามาตรฐาน HDPE';
+  } else if (thickness <= 50) {
+    // หนา
+    z1=165; z2=180; z3=188; flange=192; die=198;
+    note = 'ถุงหนา — อุณหภูมิสูงขึ้นเพื่อให้เนื้อไหลดี';
+  } else {
+    // หนามาก
+    z1=170; z2=185; z3=195; flange=200; die=208;
+    note = 'ถุงหนามาก — ต้องการอุณหภูมิสูง';
+  }
+
+  el.style.display = 'block';
+  el.innerHTML = `
+    <div style="font-weight:600;color:var(--accent);margin-bottom:6px">
+      💡 ค่าแนะนำสำหรับ ${thickness} ไมครอน
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:6px">
+      <div style="text-align:center"><div style="font-size:10px;color:var(--text2)">Zone 1</div><div style="font-weight:700">${z1}°C</div></div>
+      <div style="text-align:center"><div style="font-size:10px;color:var(--text2)">Zone 2</div><div style="font-weight:700">${z2}°C</div></div>
+      <div style="text-align:center"><div style="font-size:10px;color:var(--text2)">Zone 3</div><div style="font-weight:700">${z3}°C</div></div>
+      <div style="text-align:center"><div style="font-size:10px;color:var(--text2)">แปลน</div><div style="font-weight:700">${flange}°C</div></div>
+      <div style="text-align:center"><div style="font-size:10px;color:var(--text2)">หัวดาย</div><div style="font-weight:700">${die}°C</div></div>
+    </div>
+    <div style="font-size:11px;color:var(--text2);margin-bottom:6px">${note}</div>
+    <button class="btn btn-primary btn-sm" onclick="applyTempSuggestion(${z1},${z2},${z3},${flange},${die})">✅ ใช้ค่านี้</button>
+  `;
+}
+
+function applyTempSuggestion(z1, z2, z3, flange, die) {
+  document.getElementById('f_zone1').value = z1;
+  document.getElementById('f_zone2').value = z2;
+  document.getElementById('f_zone3').value = z3;
+  document.getElementById('f_flangeTemp').value = flange;
+  document.getElementById('f_dieTemp').value = die;
+  document.getElementById('tempSuggestion').style.display = 'none';
+  showToast('ใส่ค่าอุณหภูมิแนะนำแล้ว ✓','success');
+}
+function playMaintenanceAlert() {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    if (ctx.state === 'suspended') ctx.resume();
+    // 2 low beeps for maintenance
+    [0, 0.4].forEach(delay => {
+      const o = ctx.createOscillator(); const g = ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.frequency.value = 440; o.type = 'triangle';
+      g.gain.setValueAtTime(0.3, ctx.currentTime+delay);
+      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime+delay+0.3);
+      o.start(ctx.currentTime+delay); o.stop(ctx.currentTime+delay+0.3);
+    });
+  } catch(e) {}
+}
+
+function playAlert() {
+  try {
+    const AudioCtx = window.AudioContext || window.webkitAudioContext;
+    if (!AudioCtx) return;
+    const ctx = new AudioCtx();
+    // iOS requires resume after user gesture
+    if (ctx.state === 'suspended') ctx.resume();
+    [0,300,600].forEach(delay=>{
+      const o=ctx.createOscillator(); const g=ctx.createGain();
+      o.connect(g); g.connect(ctx.destination);
+      o.frequency.value=880; g.gain.value=0.3;
+      o.start(ctx.currentTime+delay/1000);
+      o.stop(ctx.currentTime+delay/1000+0.15);
+    });
+  } catch(e){}
+}
+// ===== WEB PUSH NOTIFICATION =====
+async function requestNotificationPermission() {
+  if (!('Notification' in window)) {
+    showToast('Browser นี้ไม่รองรับ Notification','error'); return;
+  }
+  const result = await Notification.requestPermission();
+  if (result === 'granted') {
+    showToast('เปิดการแจ้งเตือนสำเร็จ ✓','success');
+    // Test notification
+    new Notification('HDPE Alert ✅', {
+      body: 'เปิดการแจ้งเตือนสำเร็จแล้ว',
+      icon: 'https://cdn-icons-png.flaticon.com/512/1828/1828843.png'
+    });
+    renderNotificationStatus();
+  } else {
+    showToast('ไม่ได้รับอนุญาตการแจ้งเตือน','warn');
+    renderNotificationStatus();
+  }
+}
+
+function sendPushNotification(r, cfg) {
+  if (!('Notification' in window)) return;
+  if (Notification.permission !== 'granted') return;
+  const msg = `เครื่อง ${r.machine} | ของเสีย ${r.wasteRate}% เกินเป้า ${cfg.target}%`;
+  new Notification('⚠️ HDPE Alert — ของเสียเกินเกณฑ์', {
+    body: msg,
+    icon: 'https://cdn-icons-png.flaticon.com/512/1828/1828843.png',
+    badge: 'https://cdn-icons-png.flaticon.com/512/1828/1828843.png',
+    tag: 'hdpe-alert',
+    requireInteraction: true
+  });
+}
+
+function renderNotificationStatus() {
+  const el = document.getElementById('notifStatus');
+  if (!el) return;
+  if (!('Notification' in window)) {
+    el.innerHTML = '<span style="color:var(--red2)">❌ Browser ไม่รองรับ</span>'; return;
+  }
+  const status = Notification.permission;
+  const map = {
+    granted: '<span style="color:var(--green)">✅ เปิดอยู่</span>',
+    denied:  '<span style="color:var(--red2)">❌ ถูกบล็อก (แก้ในการตั้งค่า Browser)</span>',
+    default: '<span style="color:var(--yellow)">⚠️ ยังไม่ได้อนุญาต</span>'
+  };
+  el.innerHTML = map[status] || '';
+}
+
+function testNotification() {
+  if (Notification.permission !== 'granted') {
+    showToast('กรุณาเปิดการแจ้งเตือนก่อน','warn'); return;
+  }
+  new Notification('🧪 ทดสอบ HDPE Alert', {
+    body: 'ระบบแจ้งเตือนทำงานปกติ ✅',
+    icon: 'https://cdn-icons-png.flaticon.com/512/1828/1828843.png',
+    tag: 'hdpe-test'
+  });
+  showToast('ส่งการแจ้งเตือนทดสอบแล้ว','success');
+}
+
+async function sendLineNotify(r, cfg) {
+  // Line Notify ปิดบริการแล้ว — ใช้ Web Push แทน
+  sendPushNotification(r, cfg);
+}
+</script>
+
+<script>
+// ===== RECORDS TABLE =====
+function applyFilters() { recordsPage=1; renderRecordsTable(); }
+function clearFilters() {
+  ['flt_dateFrom','flt_dateTo','flt_lotNo','flt_search'].forEach(id=>{ const e=document.getElementById(id); if(e) e.value=''; });
+  ['flt_machine','flt_shift','flt_wasteType'].forEach(id=>{ const e=document.getElementById(id); if(e) e.value=''; });
+  recordsPage=1; renderRecordsTable();
+}
+function sortRecords(key) {
+  if (recordsSortKey===key) recordsSortDir*=-1; else { recordsSortKey=key; recordsSortDir=-1; }
+  renderRecordsTable();
+}
+function renderRecordsTable() {
+  let records = getRecords();
+  const df = document.getElementById('flt_dateFrom')?.value;
+  const dt = document.getElementById('flt_dateTo')?.value;
+  const fm = document.getElementById('flt_machine')?.value;
+  const fs = document.getElementById('flt_shift')?.value;
+  const fw = document.getElementById('flt_wasteType')?.value;
+  const fl = document.getElementById('flt_lotNo')?.value.toLowerCase();
+  const fq = document.getElementById('flt_search')?.value.toLowerCase();
+  if (df) records=records.filter(r=>r.date>=df);
+  if (dt) records=records.filter(r=>r.date<=dt);
+  if (fm) records=records.filter(r=>r.machine==fm);
+  if (fs) records=records.filter(r=>r.shift===fs);
+  if (fw) records=records.filter(r=>r.wasteType===fw);
+  if (fl) records=records.filter(r=>(r.lotNo||'').toLowerCase().includes(fl));
+  if (fq) records=records.filter(r=>JSON.stringify(r).toLowerCase().includes(fq));
+  records.sort((a,b)=>{
+    let av=a[recordsSortKey]||'', bv=b[recordsSortKey]||'';
+    if (typeof av==='number') return (av-bv)*recordsSortDir;
+    return String(av).localeCompare(String(bv))*recordsSortDir;
+  });
+  filteredRecords = records;
+  const total = records.length;
+  const totalWaste = records.reduce((s,r)=>s+r.wasteQty,0);
+  const totalProd = records.reduce((s,r)=>s+r.prodQty,0);
+  const avgRate = totalProd>0?(totalWaste/totalProd*100).toFixed(2):0;
+  const sumEl = document.getElementById('recordsSummary');
+  if (sumEl) sumEl.innerHTML = `พบ <b>${total}</b> รายการ | ผลผลิตรวม: <b>${totalProd.toFixed(1)}</b> kg | ของเสียรวม: <b>${totalWaste.toFixed(1)}</b> kg | อัตราเฉลี่ย: <b>${avgRate}%</b>`;
+  const perPage=20, start=(recordsPage-1)*perPage, end=start+perPage;
+  const page = records.slice(start,end);
+  const cfg = getConfig();
+  const tbody = document.getElementById('recordsTbody');
+  if (!tbody) return;
+  tbody.innerHTML = page.map(r=>{
+    const rateClass = r.wasteRate>cfg.target?'badge-danger':r.wasteRate>cfg.target*0.8?'badge-warn':'badge-ok';
+    return `<tr>
+      <td>${r.date}</td>
+      <td>${r.orderId||'-'}</td>
+      <td>เครื่อง ${r.machine}</td>
+      <td>${r.shift||'-'}</td>
+      <td>${r.lotNo||'-'}</td>
+      <td>${r.materialType||'-'}</td>
+      <td>${r.wasteType||'-'}</td>
+      <td>${(r.prodQty||0).toFixed(1)}</td>
+      <td>${(r.wasteQty||0).toFixed(1)}</td>
+      <td><span class="${rateClass}">${(r.wasteRate||0).toFixed(2)}%</span></td>
+      <td style="font-size:11px;color:var(--text2)">${r.createdBy||'-'}</td>
+      <td>
+        ${canDo('edit')?`<button class="btn btn-secondary btn-sm" onclick="editRecord('${r.id}')">✏️</button>`:''}
+        ${canDo('admin')?`<button class="btn btn-danger btn-sm" onclick="deleteRecord('${r.id}')">🗑</button>`:''}
+        <button class="btn btn-secondary btn-sm" onclick="duplicateRecord('${r.id}')" title="คัดลอกรายการ">📋</button>
+        <button class="btn btn-secondary btn-sm" onclick="showRecordHistory('${r.id}')" title="ประวัติการแก้ไข">📜</button>
+      </td>
+    </tr>`;
+  }).join('');
+  renderPagination(total, perPage, recordsPage, p=>{ recordsPage=p; renderRecordsTable(); }, 'recordsPagination');
+}
+function renderPagination(total, perPage, current, cb, elId) {
+  const pages = Math.ceil(total/perPage);
+  const el = document.getElementById(elId);
+  if (!el) return;
+  if (pages<=1) { el.innerHTML=''; return; }
+  let html='';
+  for (let i=1;i<=pages;i++) {
+    if (i===1||i===pages||Math.abs(i-current)<=2) {
+      html+=`<button class="page-btn${i===current?' active':''}" onclick="(${cb})(${i})">${i}</button>`;
+    } else if (Math.abs(i-current)===3) html+='<span style="padding:5px">...</span>';
+  }
+  el.innerHTML=html;
+}
+function editRecord(id) {
+  if (!canDo('edit')) { showToast('ไม่มีสิทธิ์แก้ไข','error'); return; }
+  const r = getRecords().find(x=>x.id===id);
+  if (!r) return;
+  editingRecordId=id;
+  const body = document.getElementById('editModalBody');
+  body.innerHTML = `
+    <div class="form-row">
+      <div class="form-group"><label>วันที่</label><input type="date" id="em_date" value="${r.date}"></div>
+      <div class="form-group"><label>เลขที่ใบสั่งผลิต</label><input type="text" id="em_orderId" value="${r.orderId||''}"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>เครื่อง</label><select id="em_machine">${MACHINE_LIST.map(m=>`<option value="${m}"${r.machine==m?' selected':''}>${m}</option>`).join('')}</select></div>
+      <div class="form-group"><label>กะ</label><select id="em_shift">
+        ${['เช้า','บ่าย','ดึก'].map(s=>`<option${r.shift===s?' selected':''}>${s}</option>`).join('')}
+      </select></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Lot วัตถุดิบ</label><input type="text" id="em_lotNo" value="${r.lotNo||''}"></div>
+      <div class="form-group"><label>ชนิดเม็ดพลาสติก</label><input type="text" id="em_materialType" value="${r.materialType||''}"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>ผลผลิต (kg)</label><input type="number" id="em_prodQty" value="${r.prodQty||0}" step="0.1"></div>
+      <div class="form-group"><label>ของเสีย (kg)</label><input type="number" id="em_wasteQty" value="${r.wasteQty||0}" step="0.1"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>ประเภทของเสีย</label><select id="em_wasteType">${WASTE_TYPES.map(w=>`<option${r.wasteType===w?' selected':''}>${w}</option>`).join('')}</select></div>
+      <div class="form-group"><label>ผู้รับผิดชอบ</label><input type="text" id="em_responsible" value="${r.responsible||''}"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>สาเหตุ</label><textarea id="em_cause">${r.cause||''}</textarea></div>
+      <div class="form-group"><label>แนวทางแก้ไข</label><textarea id="em_solution">${r.solution||''}</textarea></div>
+    </div>
+    <div class="why-section">
+      <div class="why-title">🔍 5-Why</div>
+      <div class="form-row">
+        <div class="form-group"><label>Why 1</label><input type="text" id="em_why1" value="${r.why1||''}"></div>
+        <div class="form-group"><label>Why 2</label><input type="text" id="em_why2" value="${r.why2||''}"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Why 3</label><input type="text" id="em_why3" value="${r.why3||''}"></div>
+        <div class="form-group"><label>Why 4</label><input type="text" id="em_why4" value="${r.why4||''}"></div>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>Why 5</label><input type="text" id="em_why5" value="${r.why5||''}"></div>
+        <div class="form-group"><label>Root Cause</label><input type="text" id="em_rootCause" value="${r.rootCause||''}"></div>
+      </div>
+    </div>`;
+  document.getElementById('editModal').style.display='flex';
+}
+function saveEditRecord() {
+  const records = getRecords();
+  const idx = records.findIndex(x=>x.id===editingRecordId);
+  if (idx<0) return;
+  const r = records[idx];
+  r.date=document.getElementById('em_date').value;
+  r.orderId=document.getElementById('em_orderId').value;
+  r.machine=parseInt(document.getElementById('em_machine').value);
+  r.shift=document.getElementById('em_shift').value;
+  r.lotNo=document.getElementById('em_lotNo').value;
+  r.materialType=document.getElementById('em_materialType').value;
+  r.prodQty=parseFloat(document.getElementById('em_prodQty').value)||0;
+  r.wasteQty=parseFloat(document.getElementById('em_wasteQty').value)||0;
+  r.wasteRate=calcWasteRate(r.prodQty,r.wasteQty);
+  r.wasteType=document.getElementById('em_wasteType').value;
+  r.responsible=document.getElementById('em_responsible').value;
+  r.cause=document.getElementById('em_cause').value;
+  r.solution=document.getElementById('em_solution').value;
+  r.why1=document.getElementById('em_why1').value;
+  r.why2=document.getElementById('em_why2').value;
+  r.why3=document.getElementById('em_why3').value;
+  r.why4=document.getElementById('em_why4').value;
+  r.why5=document.getElementById('em_why5').value;
+  r.rootCause=document.getElementById('em_rootCause').value;
+  saveRecords(records);
+  addAudit('แก้ไขข้อมูล',`ID ${r.id} เครื่อง ${r.machine}`, r.id);
+  closeModal('editModal');
+  renderRecordsTable();
+  showToast('แก้ไขข้อมูลสำเร็จ','success');
+}
+// ===== DAILY SNAPSHOT =====
+function checkMidnightSnapshot() {
+  const today = new Date().toISOString().slice(0,10);
+  const lastSnap = localStorage.getItem('hdpe_last_snapshot');
+  if (lastSnap === today) return; // already done today
+  const yesterday = new Date();
+  yesterday.setDate(yesterday.getDate()-1);
+  const yd = yesterday.toISOString().slice(0,10);
+  const recs = getRecords().filter(r=>r.date===yd);
+  if (!recs.length) { localStorage.setItem('hdpe_last_snapshot', today); return; }
+  const totalProd = recs.reduce((s,r)=>s+r.prodQty,0);
+  const totalWaste = recs.reduce((s,r)=>s+r.wasteQty,0);
+  const avgRate = totalProd>0?(totalWaste/totalProd*100).toFixed(2):0;
+  const snapshots = JSON.parse(localStorage.getItem('hdpe_snapshots')||'[]');
+  snapshots.unshift({ date:yd, records:recs.length, prodQty:totalProd.toFixed(1), wasteQty:totalWaste.toFixed(1), wasteRate:avgRate, createdAt:new Date().toISOString() });
+  if (snapshots.length > 90) snapshots.splice(90); // keep 90 days
+  localStorage.setItem('hdpe_snapshots', JSON.stringify(snapshots));
+  localStorage.setItem('hdpe_last_snapshot', today);
+}
+
+function updateTodayCounter() {
+  const today = new Date().toISOString().slice(0,10);
+  const count = getRecords().filter(r=>r.date===today).length;
+  const el = document.getElementById('todayCounter');
+  if (el) el.textContent = count > 0 ? `📝 วันนี้ ${count} รายการ` : '';
+}
+
+function compareWithRecipe() {
+  const recipeId = document.getElementById('recipeSelect').value;
+  if (!recipeId) return;
+  const recipe = getRecipes().find(r=>r.id===recipeId);
+  if (!recipe) return;
+  const fields = [
+    {label:'Zone 1', recipeKey:'zone1', formId:'f_zone1', unit:'°C'},
+    {label:'Zone 2', recipeKey:'zone2', formId:'f_zone2', unit:'°C'},
+    {label:'Zone 3', recipeKey:'zone3', formId:'f_zone3', unit:'°C'},
+    {label:'Flange', recipeKey:'flangeTemp', formId:'f_flangeTemp', unit:'°C'},
+    {label:'Die', recipeKey:'dieTemp', formId:'f_dieTemp', unit:'°C'},
+    {label:'Screw Motor', recipeKey:'screwMotor', formId:'f_screwMotor', unit:'kW'},
+    {label:'Thick Motor', recipeKey:'thickMotor', formId:'f_thickMotor', unit:'Hz'},
+  ];
+  const diffs = fields.map(f => {
+    const recipeVal = parseFloat(recipe[f.recipeKey]) || 0;
+    const formVal = parseFloat(document.getElementById(f.formId)?.value) || 0;
+    if (!recipeVal || !formVal) return null;
+    const diff = formVal - recipeVal;
+    return { label: f.label, recipe: recipeVal, actual: formVal, diff, unit: f.unit };
+  }).filter(Boolean);
+  if (!diffs.length) { showToast('ไม่มีข้อมูลเปรียบเทียบ','info'); return; }
+  const rows = diffs.map(d => {
+    const color = Math.abs(d.diff) > 5 ? '#e74c3c' : Math.abs(d.diff) > 2 ? '#f39c12' : '#27ae60';
+    const sign = d.diff > 0 ? '+' : '';
+    return `<tr>
+      <td>${d.label}</td>
+      <td>${d.recipe} ${d.unit}</td>
+      <td>${d.actual} ${d.unit}</td>
+      <td style="color:${color};font-weight:700">${sign}${d.diff.toFixed(1)} ${d.unit}</td>
+    </tr>`;
+  }).join('');
+  const existing = document.getElementById('recipeCompareBox');
+  if (existing) existing.remove();
+  const box = document.createElement('div');
+  box.id = 'recipeCompareBox';
+  box.style.cssText = 'margin-top:10px;padding:10px;background:var(--surface2);border-radius:8px;border-left:3px solid #f39c12;font-size:12px';
+  box.innerHTML = `<div style="font-weight:700;color:#f39c12;margin-bottom:8px">📊 เปรียบเทียบกับสูตร "${recipe.name}"</div>
+    <table style="width:100%;border-collapse:collapse;font-size:12px">
+      <thead><tr style="color:var(--text2)"><th style="text-align:left;padding:3px 6px">พารามิเตอร์</th><th style="padding:3px 6px">สูตร</th><th style="padding:3px 6px">จริง</th><th style="padding:3px 6px">ต่าง</th></tr></thead>
+      <tbody>${rows}</tbody>
+    </table>
+    <button class="btn btn-secondary btn-sm" onclick="document.getElementById('recipeCompareBox').remove()" style="margin-top:8px">ปิด</button>`;
+  document.getElementById('recipeSelect').closest('.form-row').after(box);
+}
+
+function duplicateRecord(id) {
+  if (!canDo('add')) { showToast('ไม่มีสิทธิ์บันทึกข้อมูล','error'); return; }
+  const r = getRecords().find(x=>x.id===id);
+  if (!r) return;
+  // Fill form with existing data
+  const set = (eid, val) => { const el=document.getElementById(eid); if(el&&val!==undefined) el.value=val; };
+  set('f_orderId', r.orderId);
+  set('f_date', new Date().toISOString().slice(0,10));
+  set('f_machine', r.machine);
+  set('f_shift', r.shift);
+  set('f_responsible', r.responsible);
+  set('f_supplier', r.supplier);
+  set('f_lotNo', r.lotNo);
+  set('f_materialType', r.materialType);
+  set('f_bagSize', r.bagSize);
+  set('f_thickness', r.thickness);
+  set('f_zone1', r.zone1); set('f_zone2', r.zone2); set('f_zone3', r.zone3);
+  set('f_flangeTemp', r.flangeTemp); set('f_dieTemp', r.dieTemp);
+  set('f_screwMotor', r.screwMotor); set('f_thickMotor', r.thickMotor);
+  set('f_wasteType', r.wasteType);
+  set('f_prodQty', r.prodQty); set('f_wasteQty', r.wasteQty);
+  set('f_cause', r.cause); set('f_solution', r.solution);
+  toggleCustomBag(); updateWastePreview();
+  // Switch to record tab
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-record').classList.add('active');
+  document.querySelectorAll('.tab-btn').forEach(b=>{ if(b.getAttribute('onclick')&&b.getAttribute('onclick').indexOf('record')>-1) b.classList.add('active'); });
+  const dupMsg = ['คัดลอก','ข้อมูล','เข้าฟอร์ม','แล้ว'].join('');
+  showToast(dupMsg,'info', 4000);
+}
+
+function deleteRecord(id) {
+  if (!canDo('admin')) { showToast('ต้องการสิทธิ์ Admin','error'); return; }
+  requirePin(()=>{
+    const records = getRecords().filter(r=>r.id!==id);
+    saveRecords(records);
+    addAudit('ลบข้อมูล',`ID ${id}`);
+    renderRecordsTable();
+    showToast('ลบข้อมูลแล้ว','success');
+  });
+}
+
+// ===== TEMPLATES =====
+function getTemplates() { return load(STORAGE.templates,[]); }
+function saveTemplate() {
+  const name = prompt('ชื่อเทมเพลต:');
+  if (!name) return;
+  const data = getFormData();
+  delete data.id; delete data.date; delete data.createdAt; delete data.createdBy;
+  const templates = getTemplates();
+  templates.push({id:genId(), name, data});
+  save(STORAGE.templates, templates);
+  populateTemplateSelect();
+  showToast('บันทึกเทมเพลตแล้ว','success');
+}
+function applyTemplate() {
+  const id = document.getElementById('templateSelect').value;
+  if (!id) { showToast('กรุณาเลือกเทมเพลตก่อน','warn'); return; }
+  const t = getTemplates().find(x=>x.id===id);
+  if (!t) return;
+  fillFormFromData(t.data);
+  showToast('โหลดเทมเพลตแล้ว','info');
+}
+function deleteTemplate() {
+  const id = document.getElementById('templateSelect').value;
+  if (!id) { showToast('กรุณาเลือกเทมเพลตที่ต้องการลบก่อน','warn'); return; }
+  const t = getTemplates().find(x=>x.id===id);
+  if (!t) return;
+  if (!confirm(`ลบเทมเพลต "${t.name}" ใช่ไหม?`)) return;
+  const templates = getTemplates().filter(x=>x.id!==id);
+  save(STORAGE.templates, templates);
+  populateTemplateSelect();
+  showToast(`ลบเทมเพลต "${t.name}" แล้ว`,'success');
+}
+function populateTemplateSelect() {
+  const sel = document.getElementById('templateSelect');
+  if (!sel) return;
+  const templates = getTemplates();
+  sel.innerHTML='<option value="">-- เลือกเทมเพลต --</option>'+templates.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
+}
+function fillFormFromData(d) {
+  if (!d) return;
+  const fields = ['machine','shift','supplier','bagSize','thickness','zone1','zone2','zone3','flangeTemp','dieTemp','screwMotor','thickMotor','wasteType'];
+  fields.forEach(f=>{ const el=document.getElementById('f_'+f); if(el&&d[f]!==undefined) el.value=d[f]; });
+  toggleCustomBag();
+}
+
+// ===== RECIPES =====
+function getRecipes() { return load(STORAGE.recipes,[]); }
+function saveRecipe() {
+  const name = document.getElementById('rc_name').value.trim();
+  if (!name) { showToast('กรุณาใส่ชื่อสูตร','error'); return; }
+  const recipe = {
+    id:genId(), name,
+    bagType: document.getElementById('rc_bagType').value.trim(),
+    bagSize: document.getElementById('rc_bagSize').value.trim(),
+    thickness: parseFloat(document.getElementById('rc_thickness').value)||0,
+    zone1: parseFloat(document.getElementById('rc_zone1').value)||0,
+    zone2: parseFloat(document.getElementById('rc_zone2').value)||0,
+    zone3: parseFloat(document.getElementById('rc_zone3').value)||0,
+    flangeTemp: parseFloat(document.getElementById('rc_flangeTemp').value)||0,
+    dieTemp: parseFloat(document.getElementById('rc_dieTemp').value)||0,
+    screwMotor: parseFloat(document.getElementById('rc_screwMotor').value)||0,
+    thickMotor: parseFloat(document.getElementById('rc_thickMotor').value)||0,
+  };
+  const recipes = getRecipes();
+  recipes.push(recipe);
+  save(STORAGE.recipes, recipes);
+  addAudit('เพิ่มสูตร', name);
+  renderRecipeList();
+  populateRecipeSelect();
+  clearRecipeForm();
+  showToast('บันทึกสูตรแล้ว','success');
+}
+function clearRecipeForm() {
+  ['rc_name','rc_bagType','rc_bagSize','rc_thickness','rc_zone1','rc_zone2','rc_zone3','rc_flangeTemp','rc_dieTemp','rc_screwMotor','rc_thickMotor'].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value='';
+  });
+}
+function renderRecipeList() {
+  const el = document.getElementById('recipeList');
+  if (!el) return;
+  const recipes = getRecipes();
+  if (!recipes.length) { el.innerHTML='<div style="color:var(--text2);text-align:center;padding:20px">ยังไม่มีสูตรที่บันทึก</div>'; return; }
+  el.innerHTML = recipes.map(r=>`
+    <div class="recipe-card">
+      <div>
+        <div class="recipe-name">${r.name}</div>
+        <div class="recipe-meta">${r.bagType||''} ${r.bagSize||''} ${r.thickness?r.thickness+'µm':''} | Z1:${r.zone1} Z2:${r.zone2} Z3:${r.zone3}°C</div>
+      </div>
+      <div style="display:flex;gap:6px">
+        <button class="btn btn-secondary btn-sm" onclick="editRecipe('${r.id}')">✏️</button>
+        ${canDo('admin')?`<button class="btn btn-danger btn-sm" onclick="deleteRecipe('${r.id}')">🗑</button>`:''}
+      </div>
+    </div>`).join('');
+}
+function populateRecipeSelect() {
+  const sel = document.getElementById('recipeSelect');
+  if (!sel) return;
+  const recipes = getRecipes();
+  sel.innerHTML='<option value="">-- เลือกสูตร --</option>'+recipes.map(r=>`<option value="${r.id}">${r.name}</option>`).join('');
+}
+function applyRecipe() {
+  const id = document.getElementById('recipeSelect').value;
+  if (!id) return;
+  const r = getRecipes().find(x=>x.id===id);
+  if (!r) return;
+  const map = {bagSize:'f_bagSize',thickness:'f_thickness',zone1:'f_zone1',zone2:'f_zone2',zone3:'f_zone3',flangeTemp:'f_flangeTemp',dieTemp:'f_dieTemp',screwMotor:'f_screwMotor',thickMotor:'f_thickMotor'};
+  Object.entries(map).forEach(([rk,fk])=>{ const el=document.getElementById(fk); if(el&&r[rk]) el.value=r[rk]; });
+  showToast('โหลดสูตรแล้ว: '+r.name,'info');
+}
+function editRecipe(id) {
+  const r = getRecipes().find(x=>x.id===id);
+  if (!r) return;
+  document.getElementById('editRecipeId').value=id;
+  document.getElementById('recipeEditBody').innerHTML=`
+    <div class="form-row">
+      <div class="form-group"><label>ชื่อสูตร</label><input type="text" id="erm_name" value="${r.name}"></div>
+      <div class="form-group"><label>ประเภทถุง</label><input type="text" id="erm_bagType" value="${r.bagType||''}"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>ขนาดถุง</label><input type="text" id="erm_bagSize" value="${r.bagSize||''}"></div>
+      <div class="form-group"><label>ความหนา (µm)</label><input type="number" id="erm_thickness" value="${r.thickness||''}"></div>
+    </div>
+    <div class="form-row-3">
+      <div class="form-group"><label>Zone 1</label><input type="number" id="erm_zone1" value="${r.zone1||''}"></div>
+      <div class="form-group"><label>Zone 2</label><input type="number" id="erm_zone2" value="${r.zone2||''}"></div>
+      <div class="form-group"><label>Zone 3</label><input type="number" id="erm_zone3" value="${r.zone3||''}"></div>
+    </div>
+    <div class="form-row-3">
+      <div class="form-group"><label>Flange</label><input type="number" id="erm_flangeTemp" value="${r.flangeTemp||''}"></div>
+      <div class="form-group"><label>Die</label><input type="number" id="erm_dieTemp" value="${r.dieTemp||''}"></div>
+      <div class="form-group"><label>Screw (kW)</label><input type="number" id="erm_screwMotor" value="${r.screwMotor||''}"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>Thick Motor (Hz)</label><input type="number" id="erm_thickMotor" value="${r.thickMotor||''}"></div>
+    </div>`;
+  document.getElementById('recipeEditModal').style.display='flex';
+}
+function saveEditRecipe() {
+  const id = document.getElementById('editRecipeId').value;
+  const recipes = getRecipes();
+  const r = recipes.find(x=>x.id===id);
+  if (!r) return;
+  r.name=document.getElementById('erm_name').value;
+  r.bagType=document.getElementById('erm_bagType').value;
+  r.bagSize=document.getElementById('erm_bagSize').value;
+  r.thickness=parseFloat(document.getElementById('erm_thickness').value)||0;
+  r.zone1=parseFloat(document.getElementById('erm_zone1').value)||0;
+  r.zone2=parseFloat(document.getElementById('erm_zone2').value)||0;
+  r.zone3=parseFloat(document.getElementById('erm_zone3').value)||0;
+  r.flangeTemp=parseFloat(document.getElementById('erm_flangeTemp').value)||0;
+  r.dieTemp=parseFloat(document.getElementById('erm_dieTemp').value)||0;
+  r.screwMotor=parseFloat(document.getElementById('erm_screwMotor').value)||0;
+  r.thickMotor=parseFloat(document.getElementById('erm_thickMotor').value)||0;
+  save(STORAGE.recipes, recipes);
+  addAudit('แก้ไขสูตร', r.name);
+  closeModal('recipeEditModal');
+  renderRecipeList();
+  populateRecipeSelect();
+  showToast('แก้ไขสูตรแล้ว','success');
+}
+function deleteRecipe(id) {
+  if (!canDo('admin')) { showToast('ต้องการสิทธิ์ Admin','error'); return; }
+  requirePin(()=>{
+    const recipes = getRecipes().filter(r=>r.id!==id);
+    save(STORAGE.recipes, recipes);
+    addAudit('ลบสูตร',`ID ${id}`);
+    renderRecipeList();
+    populateRecipeSelect();
+    showToast('ลบสูตรแล้ว','success');
+  });
+}
+</script>
+
+<script>
+// ===== MAINTENANCE =====
+function getMaintenance() { return load(STORAGE.maintenance,[]); }
+function saveMaintenance() {
+  const machine = parseInt(document.getElementById('mt_machine').value);
+  const task = document.getElementById('mt_task').value;
+  const dt = document.getElementById('mt_datetime').value;
+  const op = document.getElementById('mt_operator').value.trim();
+  const note = document.getElementById('mt_note').value.trim();
+  if (!machine||!task||!dt) { showToast('กรุณากรอกข้อมูลให้ครบ','error'); return; }
+  const records = getMaintenance();
+  records.push({id:genId(), machine, task, datetime:dt, operator:op, note, createdAt:new Date().toISOString()});
+  save(STORAGE.maintenance, records);
+  addAudit('บำรุงรักษา',`เครื่อง ${machine} - ${task}`);
+  renderMaintenance();
+  updateMaintenanceBadge();
+  showToast('บันทึกการบำรุงรักษาแล้ว','success');
+  document.getElementById('mt_note').value='';
+}
+function renderMaintenance() {
+  const records = getMaintenance();
+  const now = new Date();
+  const tbody = document.getElementById('maintenanceTbody');
+  const alerts = document.getElementById('maintenanceAlerts');
+  if (!tbody) return;
+  let alertHtml='';
+  let hasOverdue = false;
+  tbody.innerHTML = MACHINE_LIST.map(m=>{
+    const cells = MAINTENANCE_TASKS.map(task=>{
+      const last = records.filter(r=>r.machine===m&&r.task===task.label).sort((a,b)=>b.datetime.localeCompare(a.datetime))[0];
+      let status='', badge='', diff=0;
+      if (!last) { status='ยังไม่มีข้อมูล'; badge='badge-warn'; }
+      else {
+        const lastDate = new Date(last.datetime);
+        if (task.intervalDays) {
+          diff = (now-lastDate)/(1000*3600*24);
+          if (diff>task.intervalDays) { status=`เกินกำหนด ${diff.toFixed(1)} วัน`; badge='badge-danger'; alertHtml+=`<div class="alert-banner danger">⚠️ เครื่อง ${m}: ${task.label} เกินกำหนด ${diff.toFixed(1)} วัน</div>`; hasOverdue=true; }
+          else if (diff>task.intervalDays-1) { status=`ใกล้ถึงกำหนด ${((task.intervalDays-diff)*24).toFixed(0)} ชม.`; badge='badge-warn'; alertHtml+=`<div class="alert-banner warn">⏰ เครื่อง ${m}: ${task.label} ใกล้ถึงกำหนดแล้ว (เหลือ ${((task.intervalDays-diff)*24).toFixed(0)} ชม.)</div>`; }
+          else { status=`${(task.intervalDays-diff).toFixed(1)} วันที่เหลือ`; badge='badge-ok'; }
+        } else {
+          diff = (now-lastDate)/3600000;
+          if (diff>task.intervalHours) { status=`เกินกำหนด ${diff.toFixed(1)} ชม.`; badge='badge-danger'; alertHtml+=`<div class="alert-banner danger">⚠️ เครื่อง ${m}: ${task.label} เกินกำหนด ${diff.toFixed(1)} ชม.</div>`; hasOverdue=true; }
+          else if (diff>task.intervalHours-1) { status=`ใกล้ถึงกำหนด ${(task.intervalHours-diff).toFixed(1)} ชม.`; badge='badge-warn'; alertHtml+=`<div class="alert-banner warn">⏰ เครื่อง ${m}: ${task.label} ใกล้ถึงกำหนด (เหลือ ${(task.intervalHours-diff).toFixed(1)} ชม.)</div>`; }
+          else { status=`${(task.intervalHours-diff).toFixed(1)} ชม.ที่เหลือ`; badge='badge-ok'; }
+        }
+      }
+      return `<td>
+        <span class="${badge}">${status}</span>
+        <button class="btn btn-sm" style="margin-left:6px;background:#27ae60;color:#fff;padding:2px 8px;font-size:11px" onclick="quickLogMaintenance(${m},'${task.label}')">✅ บันทึก</button>
+      </td>`;
+    }).join('');
+    return `<tr><td><b>เครื่อง ${m}</b></td>${cells}</tr>`;
+  }).join('');
+  if (alerts) alerts.innerHTML = alertHtml;
+  if (hasOverdue) playMaintenanceAlert();
+  renderMaintenanceHistory();
+}
+function quickLogMaintenance(machine, task) {
+  const operator = prompt(`บันทึก "${task}" เครื่อง ${machine}\nกรอกชื่อผู้ดำเนินการ:`);
+  if (operator === null) return; // กด Cancel
+  const now = new Date();
+  const pad = n => String(n).padStart(2,'0');
+  const datetime = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}T${pad(now.getHours())}:${pad(now.getMinutes())}`;
+  const records = getMaintenance();
+  records.push({id:genId(), machine, task, datetime, operator: operator||currentUser?.name||'ระบบ', note:'', createdAt:now.toISOString()});
+  save(STORAGE.maintenance, records);
+  addAudit('บำรุงรักษา',`เครื่อง ${machine} - ${task}`);
+  renderMaintenance();
+  updateMaintenanceBadge();
+  showToast(`บันทึก "${task}" เครื่อง ${machine} สำเร็จ ✓`,'success');
+}
+
+function renderMaintenanceHistory() {
+  const records = getMaintenance().sort((a,b)=>b.datetime.localeCompare(a.datetime));
+  const tbody = document.getElementById('maintenanceHistoryTbody');
+  if (!tbody) return;
+  tbody.innerHTML = records.map(r=>`
+    <tr>
+      <td>${r.datetime}</td>
+      <td>เครื่อง ${r.machine}</td>
+      <td>${r.task}</td>
+      <td>${r.operator||'-'}</td>
+      <td>${r.note||'-'}</td>
+      <td>${canDo('admin')?`<button class="btn btn-danger btn-sm" onclick="deleteMaintenanceRecord('${r.id}')">🗑</button>`:'-'}</td>
+    </tr>`).join('');
+}
+function deleteMaintenanceRecord(id) {
+  if (!canDo('admin')) { showToast('ต้องการสิทธิ์ Admin','error'); return; }
+  requirePin(()=>{
+    const records = getMaintenance().filter(r=>r.id!==id);
+    save(STORAGE.maintenance, records);
+    addAudit('ลบบำรุงรักษา',`ID ${id}`);
+    renderMaintenance();
+    showToast('ลบแล้ว','success');
+  });
+}
+function updateMaintenanceBadge() {
+  const records = getMaintenance();
+  const now = new Date();
+  let overdue = 0;
+  MACHINE_LIST.forEach(m=>{
+    MAINTENANCE_TASKS.forEach(task=>{
+      const last = records.filter(r=>r.machine===m&&r.task===task.label).sort((a,b)=>b.datetime.localeCompare(a.datetime))[0];
+      if (!last) { overdue++; return; }
+      const lastDate = new Date(last.datetime);
+      if (task.intervalDays) { if ((now-lastDate)/(1000*3600*24)>task.intervalDays) overdue++; }
+      else { if ((now-lastDate)/3600000>task.intervalHours) overdue++; }
+    });
+  });
+  const tab = document.getElementById('tabMaintenance');
+  if (!tab) return;
+  const existing = tab.querySelector('.badge');
+  if (existing) existing.remove();
+  if (overdue>0) {
+    const b = document.createElement('span');
+    b.className='badge'; b.textContent=overdue;
+    tab.appendChild(b);
+  }
+}
+
+// ===== DOWNTIME =====
+function getDowntime() { return load(STORAGE.downtime,[]); }
+function saveDowntime() {
+  const machine = parseInt(document.getElementById('dt_machine').value);
+  const date = document.getElementById('dt_date').value;
+  const startTime = document.getElementById('dt_startTime').value;
+  const endTime = document.getElementById('dt_endTime').value;
+  const reason = document.getElementById('dt_reason').value;
+  const details = document.getElementById('dt_details').value.trim();
+  if (!machine||!date||!startTime||!endTime) { showToast('กรุณากรอกข้อมูลให้ครบ','error'); return; }
+  const start = new Date(`${date}T${startTime}`);
+  const end = new Date(`${date}T${endTime}`);
+  let hours = (end-start)/3600000;
+  if (hours<0) hours+=24;
+  const records = getDowntime();
+  records.push({id:genId(), machine, date, startTime, endTime, hours:Math.round(hours*100)/100, reason, details, createdAt:new Date().toISOString()});
+  save(STORAGE.downtime, records);
+  addAudit('บันทึก Downtime',`เครื่อง ${machine} ${date} ${hours.toFixed(2)} ชม.`);
+  renderDowntimeTable();
+  showToast('บันทึก Downtime แล้ว','success');
+  document.getElementById('dt_details').value='';
+}
+function renderDowntimeTable() {
+  const fltM = document.getElementById('dt_flt_machine')?.value;
+  const fltD = document.getElementById('dt_flt_date')?.value;
+  let records = getDowntime();
+  if (fltM) records=records.filter(r=>r.machine==fltM);
+  if (fltD) records=records.filter(r=>r.date===fltD);
+  records.sort((a,b)=>b.date.localeCompare(a.date)||b.startTime.localeCompare(a.startTime));
+  const tbody = document.getElementById('downtimeTbody');
+  if (!tbody) return;
+  tbody.innerHTML = records.map(r=>`
+    <tr>
+      <td>${r.date}</td>
+      <td>เครื่อง ${r.machine}</td>
+      <td>${r.startTime}</td>
+      <td>${r.endTime}</td>
+      <td>${r.hours}</td>
+      <td><span class="dt-reason-badge">${r.reason}</span></td>
+      <td>${r.details||'-'}</td>
+      <td>${canDo('admin')?`<button class="btn btn-danger btn-sm" onclick="deleteDowntime('${r.id}')">🗑</button>`:'-'}</td>
+    </tr>`).join('');
+}
+function deleteDowntime(id) {
+  if (!canDo('admin')) { showToast('ต้องการสิทธิ์ Admin','error'); return; }
+  requirePin(()=>{
+    const records = getDowntime().filter(r=>r.id!==id);
+    save(STORAGE.downtime, records);
+    addAudit('ลบ Downtime',`ID ${id}`);
+    renderDowntimeTable();
+    showToast('ลบแล้ว','success');
+  });
+}
+function getTotalDowntimeThisMonth() {
+  const now = new Date();
+  const ym = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  return getDowntime().filter(r=>r.date.startsWith(ym)).reduce((s,r)=>s+r.hours,0);
+}
+
+// ===== SCHEDULE =====
+function getSchedule() { return load(STORAGE.schedule,[]); }
+function saveSchedule() {
+  const date = document.getElementById('sch_date').value;
+  const machine = parseInt(document.getElementById('sch_machine').value);
+  const shift = document.getElementById('sch_shift').value;
+  const operator = document.getElementById('sch_operator').value.trim();
+  if (!date||!machine||!operator) { showToast('กรุณากรอกข้อมูลให้ครบ','error'); return; }
+  const schedule = getSchedule();
+  const existing = schedule.findIndex(s=>s.date===date&&s.machine===machine&&s.shift===shift);
+  if (existing>=0) schedule[existing].operator=operator;
+  else schedule.push({id:genId(), date, machine, shift, operator});
+  save(STORAGE.schedule, schedule);
+  renderScheduleList();
+  showToast('บันทึกตารางเวรแล้ว','success');
+}
+function renderScheduleList() {
+  const el = document.getElementById('scheduleList');
+  if (!el) return;
+  const today = new Date().toISOString().slice(0,10);
+  const schedule = getSchedule().filter(s=>s.date>=today).sort((a,b)=>a.date.localeCompare(b.date));
+  if (!schedule.length) { el.innerHTML='<div style="color:var(--text2);font-size:12px">ยังไม่มีตารางเวร</div>'; return; }
+  el.innerHTML = `<div style="font-size:12px">
+    ${schedule.slice(0,20).map(s=>`
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid var(--border)">
+        <span>${s.date} เครื่อง ${s.machine} กะ${s.shift}</span>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span style="color:var(--accent)">${s.operator}</span>
+          <button class="btn btn-danger btn-sm" onclick="deleteSchedule('${s.id}')" style="padding:2px 7px;font-size:11px">✕</button>
+        </div>
+      </div>`).join('')}
+  </div>`;
+}
+
+function deleteSchedule(id) {
+  if (!canDo('admin')) { showToast('ต้องการสิทธิ์ Admin','error'); return; }
+  const schedule = getSchedule().filter(s=>s.id!==id);
+  save(STORAGE.schedule, schedule);
+  renderScheduleList();
+  renderTodaySchedule();
+  showToast('ลบตารางเวรแล้ว','success');
+}
+function autoFillResponsible() {
+  const machine = parseInt(document.getElementById('f_machine')?.value);
+  const shift = document.getElementById('f_shift')?.value;
+  const today = new Date().toISOString().slice(0,10);
+  const schedule = getSchedule();
+  const entry = schedule.find(s=>s.date===today&&s.machine===machine&&s.shift===shift);
+  if (entry) {
+    const el = document.getElementById('f_responsible');
+    if (el && !el.value) el.value = entry.operator;
+  }
+}
+function renderTodaySchedule() {
+  const el = document.getElementById('todaySchedule');
+  if (!el) return;
+  const today = new Date().toISOString().slice(0,10);
+  const schedule = getSchedule().filter(s=>s.date===today);
+  if (!schedule.length) { el.innerHTML='<div style="color:var(--text2);font-size:13px">ไม่มีตารางเวรสำหรับวันนี้</div>'; return; }
+  const shifts = ['เช้า','บ่าย','ดึก'];
+  el.innerHTML=`<div class="schedule-grid">${shifts.map(sh=>{
+    const entries = schedule.filter(s=>s.shift===sh);
+    return `<div class="schedule-cell">
+      <div class="shift-label">กะ${sh}</div>
+      ${entries.length?entries.map(e=>`<div>เครื่อง ${e.machine}: ${e.operator}</div>`).join(''):'<div style="color:var(--text2)">-</div>'}
+    </div>`;
+  }).join('')}</div>`;
+}
+
+// ===== AUDIT LOG =====
+function getAudit() { return load(STORAGE.audit,[]); }
+function addAudit(action, detail, recordId) {
+  const audit = getAudit();
+  audit.unshift({id:genId(), ts:new Date().toISOString(), user:currentUser?currentUser.name:'', action, detail, recordId:recordId||''});
+  if (audit.length>500) audit.splice(500);
+  save(STORAGE.audit, audit);
+}
+
+function showRecordHistory(recordId) {
+  const audit = getAudit().filter(a=>a.recordId===recordId);
+  const body = document.getElementById('historyModalBody');
+  if (!audit.length) {
+    body.innerHTML='<div style="color:var(--text2);text-align:center;padding:20px">ไม่มีประวัติการแก้ไข</div>';
+  } else {
+    body.innerHTML=`<div class="tbl-wrap"><table>
+      <thead><tr><th>เวลา</th><th>ผู้ดำเนินการ</th><th>การกระทำ</th><th>รายละเอียด</th></tr></thead>
+      <tbody>${audit.map(a=>`<tr>
+        <td>${new Date(a.ts).toLocaleString('th-TH')}</td>
+        <td>${a.user||'-'}</td>
+        <td>${a.action}</td>
+        <td>${a.detail}</td>
+      </tr>`).join('')}</tbody>
+    </table></div>`;
+  }
+  document.getElementById('historyModal').style.display='flex';
+}
+function renderAuditLog() {
+  const tbody = document.getElementById('auditTbody');
+  if (!tbody) return;
+  const audit = getAudit().slice(0,100);
+  tbody.innerHTML = audit.map(a=>`
+    <tr>
+      <td>${new Date(a.ts).toLocaleString('th-TH')}</td>
+      <td>${a.user||'-'}</td>
+      <td>${a.action}</td>
+      <td>${a.detail}</td>
+      <td>${canDo('admin')?`<button class="btn btn-danger btn-sm" onclick="deleteAuditRow('${a.id}')">🗑</button>`:'-'}</td>
+    </tr>`).join('');
+}
+function deleteAuditRow(id) {
+  if (!canDo('admin')) { showToast('ต้องการสิทธิ์ Admin','error'); return; }
+  requirePin(()=>{
+    const audit = getAudit().filter(a=>a.id!==id);
+    save(STORAGE.audit, audit);
+    renderAuditLog();
+  });
+}
+function clearAuditLog() {
+  if (!canDo('admin')) { showToast('ต้องการสิทธิ์ Admin','error'); return; }
+  requirePin(()=>{
+    save(STORAGE.audit,[]);
+    renderAuditLog();
+    showToast('ล้าง Audit Log แล้ว','success');
+  });
+}
+
+// ===== EXPORT/IMPORT =====
+function exportCSV() {
+  const records = filteredRecords.length ? filteredRecords : getRecords();
+  const headers = ['date','orderId','machine','shift','lotNo','materialType','bagSize','thickness','zone1','zone2','zone3','flangeTemp','dieTemp','screwMotor','thickMotor','wasteType','prodQty','wasteQty','wasteRate','cause','solution','why1','why2','why3','why4','why5','rootCause','responsible','supplier'];
+  const rows = records.map(r=>headers.map(h=>JSON.stringify(r[h]||'')).join(','));
+  const csv = [headers.join(','),...rows].join('\n');
+  const blob = new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
+  const a = document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`hdpe_records_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click();
+}
+function backupJSON() {
+  const data = {};
+  Object.entries(STORAGE).forEach(([k,v])=>{ data[k]=load(v,null); });
+  const blob = new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a = document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download=`hdpe_backup_${new Date().toISOString().slice(0,10)}.json`;
+  a.click();
+}
+function restoreJSON(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e=>{
+    try {
+      const data = JSON.parse(e.target.result);
+      requirePin(()=>{
+        Object.entries(STORAGE).forEach(([k,v])=>{ if(data[k]!==undefined) save(v,data[k]); });
+        showToast('Restore สำเร็จ','success');
+        location.reload();
+      });
+    } catch(err) { showToast('ไฟล์ไม่ถูกต้อง','error'); }
+  };
+  reader.readAsText(file);
+}
+function showImportCSV() {
+  csvImportData=[];
+  document.getElementById('csvFile').value='';
+  document.getElementById('csvPreview').innerHTML='';
+  document.getElementById('confirmImportBtn').style.display='none';
+  document.getElementById('importCSVModal').style.display='flex';
+}
+function previewCSV(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e=>{
+    const lines = e.target.result.split('\n').filter(l=>l.trim());
+    if (lines.length<2) { showToast('ไฟล์ CSV ว่างเปล่า','error'); return; }
+    const headers = lines[0].split(',').map(h=>h.replace(/"/g,'').trim());
+    csvImportData=[];
+    let errors=0;
+    for (let i=1;i<lines.length;i++) {
+      const vals = lines[i].split(',').map(v=>v.replace(/"/g,'').trim());
+      const row = {};
+      headers.forEach((h,idx)=>row[h]=vals[idx]||'');
+      if (!row.date||!row.machine) { errors++; continue; }
+      csvImportData.push({
+        id:genId(), date:row.date, orderId:row.orderId||'', machine:parseInt(row.machine)||0,
+        shift:row.shift||'เช้า', lotNo:row.lotNo||'', materialType:row.materialType||'',
+        bagSize:row.bagSize||'', thickness:parseFloat(row.thickness)||0,
+        zone1:parseFloat(row.zone1)||0, zone2:parseFloat(row.zone2)||0, zone3:parseFloat(row.zone3)||0,
+        flangeTemp:parseFloat(row.flangeTemp)||0, dieTemp:parseFloat(row.dieTemp)||0,
+        screwMotor:parseFloat(row.screwMotor)||0, thickMotor:parseFloat(row.thickMotor)||0,
+        wasteType:row.wasteType||'อื่นๆ', prodQty:parseFloat(row.prodQty)||0,
+        wasteQty:parseFloat(row.wasteQty)||0,
+        wasteRate:calcWasteRate(parseFloat(row.prodQty)||0,parseFloat(row.wasteQty)||0),
+        cause:row.cause||'', solution:row.solution||'',
+        why1:row.why1||'', why2:row.why2||'', why3:row.why3||'', why4:row.why4||'', why5:row.why5||'',
+        rootCause:row.rootCause||'', responsible:row.responsible||'', supplier:row.supplier||'',
+        createdBy:'import', createdAt:new Date().toISOString()
+      });
+    }
+    const preview = document.getElementById('csvPreview');
+    preview.innerHTML=`<div style="margin-bottom:8px;font-size:13px">พบ <b>${csvImportData.length}</b> รายการที่ถูกต้อง${errors?` | ข้ามไป <b>${errors}</b> รายการ (ข้อมูลไม่ครบ)`:''}</div>
+      <div class="tbl-wrap" style="max-height:200px;overflow-y:auto">
+        <table><thead><tr><th>วันที่</th><th>เครื่อง</th><th>กะ</th><th>ผลผลิต</th><th>ของเสีย</th><th>อัตรา%</th></tr></thead>
+        <tbody>${csvImportData.slice(0,20).map(r=>`<tr><td>${r.date}</td><td>${r.machine}</td><td>${r.shift}</td><td>${r.prodQty}</td><td>${r.wasteQty}</td><td>${r.wasteRate}%</td></tr>`).join('')}</tbody>
+        </table>
+      </div>`;
+    document.getElementById('confirmImportBtn').style.display = csvImportData.length?'block':'none';
+  };
+  reader.readAsText(file,'UTF-8');
+}
+function confirmImportCSV() {
+  if (!csvImportData.length) return;
+  const records = getRecords();
+  records.push(...csvImportData);
+  saveRecords(records);
+  addAudit('Import CSV',`นำเข้า ${csvImportData.length} รายการ`);
+  closeModal('importCSVModal');
+  renderRecordsTable();
+  showToast(`นำเข้า ${csvImportData.length} รายการสำเร็จ`,'success');
+}
+function clearAllData() {
+  if (!canDo('admin')) { showToast('ต้องการสิทธิ์ Admin','error'); return; }
+  requirePin(()=>{
+    if (!confirm('ยืนยันการลบข้อมูลทั้งหมด?')) return;
+    Object.values(STORAGE).forEach(k=>localStorage.removeItem(k));
+    showToast('ล้างข้อมูลทั้งหมดแล้ว','success');
+    setTimeout(()=>location.reload(),1000);
+  });
+}
+function printReport() { window.print(); }
+</script>
+
+<script>
+// ===== CANVAS CHART HELPERS =====
+function clearCanvas(id) {
+  const c = document.getElementById(id);
+  if (!c) return null;
+  const ctx = c.getContext('2d');
+  c.width = c.parentElement.clientWidth || 400;
+  ctx.clearRect(0,0,c.width,c.height);
+  return ctx;
+}
+function getThemeColors() {
+  const isDark = document.documentElement.getAttribute('data-theme')==='dark';
+  return { text: isDark?'#e0e0e0':'#212529', grid: isDark?'#2d3561':'#dee2e6', bg: isDark?'#16213e':'#ffffff' };
+}
+const CHART_COLORS = ['#c0392b','#2980b9','#27ae60','#f39c12','#8e44ad','#16a085','#d35400','#2c3e50','#e74c3c','#3498db'];
+
+function drawBarChart(canvasId, labels, values, title, color) {
+  const ctx = clearCanvas(canvasId);
+  if (!ctx) return;
+  const c = document.getElementById(canvasId);
+  const W=c.width, H=c.height, pad=40, padTop=30, padRight=20;
+  const tc = getThemeColors();
+  ctx.fillStyle=tc.text; ctx.font='12px Segoe UI'; ctx.textAlign='center';
+  if (title) { ctx.fillText(title,W/2,16); }
+  if (!values.length) return;
+  const max = Math.max(...values,1);
+  const bw = (W-pad-padRight)/labels.length*0.7;
+  const gap = (W-pad-padRight)/labels.length;
+  values.forEach((v,i)=>{
+    const x = pad + i*gap + gap*0.15;
+    const bh = ((H-padTop-30)*v/max);
+    const y = H-30-bh;
+    ctx.fillStyle = Array.isArray(color)?color[i%color.length]:color||CHART_COLORS[0];
+    ctx.fillRect(x,y,bw,bh);
+    ctx.fillStyle=tc.text; ctx.font='10px Segoe UI'; ctx.textAlign='center';
+    ctx.fillText(v.toFixed(1),x+bw/2,y-3);
+    ctx.fillText(labels[i],x+bw/2,H-14);
+  });
+  ctx.strokeStyle=tc.grid; ctx.beginPath(); ctx.moveTo(pad,padTop); ctx.lineTo(pad,H-30); ctx.lineTo(W-padRight,H-30); ctx.stroke();
+}
+function drawLineChart(canvasId, labels, datasets, title) {
+  const ctx = clearCanvas(canvasId);
+  if (!ctx) return;
+  const c = document.getElementById(canvasId);
+  const W=c.width, H=c.height, pad=45, padTop=30, padRight=20;
+  const tc = getThemeColors();
+  if (title) { ctx.fillStyle=tc.text; ctx.font='12px Segoe UI'; ctx.textAlign='center'; ctx.fillText(title,W/2,16); }
+  const allVals = datasets.flatMap(d=>d.values);
+  if (!allVals.length) return;
+  const max = Math.max(...allVals,1)*1.1;
+  const min = 0;
+  const xStep = labels.length>1?(W-pad-padRight)/(labels.length-1):W-pad-padRight;
+  // Grid
+  for (let i=0;i<=4;i++) {
+    const y = padTop+(H-padTop-30)*i/4;
+    ctx.strokeStyle=tc.grid; ctx.setLineDash([3,3]); ctx.beginPath(); ctx.moveTo(pad,y); ctx.lineTo(W-padRight,y); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle=tc.text; ctx.font='10px Segoe UI'; ctx.textAlign='right';
+    ctx.fillText(((max-min)*(1-i/4)+min).toFixed(1),pad-4,y+4);
+  }
+  datasets.forEach((ds,di)=>{
+    ctx.strokeStyle=ds.color||CHART_COLORS[di]; ctx.lineWidth=2;
+    ctx.beginPath();
+    ds.values.forEach((v,i)=>{
+      const x = pad+i*xStep;
+      const y = padTop+(H-padTop-30)*(1-(v-min)/(max-min));
+      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    });
+    ctx.stroke(); ctx.lineWidth=1;
+    ds.values.forEach((v,i)=>{
+      const x = pad+i*xStep;
+      const y = padTop+(H-padTop-30)*(1-(v-min)/(max-min));
+      ctx.fillStyle=ds.color||CHART_COLORS[di];
+      ctx.beginPath(); ctx.arc(x,y,3,0,Math.PI*2); ctx.fill();
+    });
+  });
+  // X labels
+  ctx.fillStyle=tc.text; ctx.font='10px Segoe UI'; ctx.textAlign='center';
+  const step = Math.max(1,Math.floor(labels.length/8));
+  labels.forEach((l,i)=>{ if(i%step===0) ctx.fillText(l,pad+i*xStep,H-14); });
+  ctx.strokeStyle=tc.grid; ctx.beginPath(); ctx.moveTo(pad,padTop); ctx.lineTo(pad,H-30); ctx.lineTo(W-padRight,H-30); ctx.stroke();
+}
+function drawDonutChart(canvasId, labels, values, title) {
+  const ctx = clearCanvas(canvasId);
+  if (!ctx) return;
+  const c = document.getElementById(canvasId);
+  const W=c.width, H=c.height;
+  const tc = getThemeColors();
+  const total = values.reduce((s,v)=>s+v,0);
+  if (!total) return;
+  const cx=W*0.4, cy=H/2, r=Math.min(cx,cy)-20, ir=r*0.55;
+  let angle=-Math.PI/2;
+  values.forEach((v,i)=>{
+    const slice=(v/total)*Math.PI*2;
+    ctx.beginPath(); ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,r,angle,angle+slice);
+    ctx.fillStyle=CHART_COLORS[i%CHART_COLORS.length]; ctx.fill();
+    ctx.strokeStyle=tc.bg; ctx.lineWidth=2; ctx.stroke();
+    angle+=slice;
+  });
+  ctx.beginPath(); ctx.arc(cx,cy,ir,0,Math.PI*2); ctx.fillStyle=tc.bg; ctx.fill();
+  ctx.fillStyle=tc.text; ctx.font='bold 13px Segoe UI'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(title||'',cx,cy);
+  // Legend
+  const lx=W*0.75, ly=20;
+  labels.forEach((l,i)=>{
+    ctx.fillStyle=CHART_COLORS[i%CHART_COLORS.length];
+    ctx.fillRect(lx,ly+i*18,12,12);
+    ctx.fillStyle=tc.text; ctx.font='11px Segoe UI'; ctx.textAlign='left'; ctx.textBaseline='top';
+    ctx.fillText(`${l} (${((values[i]/total)*100).toFixed(1)}%)`,lx+16,ly+i*18);
+  });
+}
+function drawScatterChart(canvasId, points, title) {
+  const ctx = clearCanvas(canvasId);
+  if (!ctx) return;
+  const c = document.getElementById(canvasId);
+  const W=c.width, H=c.height, pad=45, padTop=30, padRight=20;
+  const tc = getThemeColors();
+  if (title) { ctx.fillStyle=tc.text; ctx.font='12px Segoe UI'; ctx.textAlign='center'; ctx.fillText(title,W/2,16); }
+  if (!points.length) return;
+  const xs=points.map(p=>p.x), ys=points.map(p=>p.y);
+  const xmax=Math.max(...xs,1), ymax=Math.max(...ys,1);
+  for (let i=0;i<=4;i++) {
+    const y=padTop+(H-padTop-30)*i/4;
+    ctx.strokeStyle=tc.grid; ctx.setLineDash([3,3]); ctx.beginPath(); ctx.moveTo(pad,y); ctx.lineTo(W-padRight,y); ctx.stroke(); ctx.setLineDash([]);
+    ctx.fillStyle=tc.text; ctx.font='10px Segoe UI'; ctx.textAlign='right';
+    ctx.fillText((ymax*(1-i/4)).toFixed(1),pad-4,y+4);
+  }
+  points.forEach(p=>{
+    const x=pad+(p.x/xmax)*(W-pad-padRight);
+    const y=padTop+(1-p.y/ymax)*(H-padTop-30);
+    ctx.fillStyle=p.color||CHART_COLORS[0];
+    ctx.beginPath(); ctx.arc(x,y,4,0,Math.PI*2); ctx.fill();
+  });
+  ctx.strokeStyle=tc.grid; ctx.beginPath(); ctx.moveTo(pad,padTop); ctx.lineTo(pad,H-30); ctx.lineTo(W-padRight,H-30); ctx.stroke();
+  ctx.fillStyle=tc.text; ctx.font='10px Segoe UI'; ctx.textAlign='center';
+  ctx.fillText('ผลผลิต (kg)',W/2,H-2);
+}
+
+// ===== DASHBOARD =====
+function renderDashboard() {
+  const records = getRecords();
+  const cfg = getConfig();
+  const today = new Date().toISOString().slice(0,10);
+  const thisMonth = today.slice(0,7);
+  const todayRecs = records.filter(r=>r.date===today);
+  const monthRecs = records.filter(r=>r.date.startsWith(thisMonth));
+  const totalWaste = monthRecs.reduce((s,r)=>s+r.wasteQty,0);
+  const totalProd = monthRecs.reduce((s,r)=>s+r.prodQty,0);
+  const avgRate = totalProd>0?(totalWaste/totalProd*100).toFixed(2):0;
+  const dtHours = getTotalDowntimeThisMonth();
+  const kpiGrid = document.getElementById('kpiGrid');
+  if (kpiGrid) kpiGrid.innerHTML=`
+    <div class="kpi-card"><div class="kpi-val">${todayRecs.length}</div><div class="kpi-label">บันทึกวันนี้</div></div>
+    <div class="kpi-card"><div class="kpi-val">${avgRate}%</div><div class="kpi-label">อัตราของเสียเดือนนี้</div></div>
+    <div class="kpi-card"><div class="kpi-val">${totalWaste.toFixed(1)}</div><div class="kpi-label">ของเสียรวม (kg)</div></div>
+    <div class="kpi-card" style="border-left-color:var(--yellow)"><div class="kpi-val" style="color:var(--yellow)">${dtHours.toFixed(1)}</div><div class="kpi-label">Downtime เดือนนี้ (ชม.)</div></div>`;
+  renderAlertBanners(records, cfg);
+  renderOEE(records, cfg);
+  renderTodaySchedule();
+  updateTodayCounter();
+  renderTrendChart(records);
+  renderMachineChart(records);
+  renderDonutChart(records);
+  renderParetoChart(records);
+  renderShiftChart(records);
+  renderScatterChart(records);
+  renderTop5(records);
+  renderMachineStatusBars(records, cfg);
+}
+function renderAlertBanners(records, cfg) {
+  const el = document.getElementById('alertBanners');
+  if (!el) return;
+  const today = new Date().toISOString().slice(0,10);
+  const todayRecs = records.filter(r=>r.date===today&&r.wasteRate>cfg.target);
+  let html='';
+  if (todayRecs.length) html+=`<div class="alert-banner danger">⚠️ วันนี้มี ${todayRecs.length} รายการที่อัตราของเสียเกินเป้าหมาย ${cfg.target}%</div>`;
+  el.innerHTML=html;
+}
+function renderOEE(records, cfg) {
+  const el = document.getElementById('oeeGrid');
+  if (!el) return;
+  const thisMonth = new Date().toISOString().slice(0,7);
+  const monthRecs = records.filter(r=>r.date.startsWith(thisMonth));
+  const dtRecords = getDowntime().filter(r=>r.date.startsWith(thisMonth));
+  const plannedHrs = cfg.plannedHrs * 3 * 30;
+  const perf = (cfg.performance||85)/100;
+  el.innerHTML = MACHINE_LIST.map(m=>{
+    const mRecs = monthRecs.filter(r=>r.machine===m);
+    const mDt = dtRecords.filter(r=>r.machine===m).reduce((s,r)=>s+r.hours,0);
+    const avail = plannedHrs>0?Math.max(0,(plannedHrs-mDt)/plannedHrs):1;
+    const totalProd = mRecs.reduce((s,r)=>s+r.prodQty,0);
+    const totalWaste = mRecs.reduce((s,r)=>s+r.wasteQty,0);
+    const quality = totalProd>0?1-(totalWaste/totalProd):1;
+    const oee = avail*perf*quality*100;
+    const cls = oee>=85?'oee-green':oee>=60?'oee-yellow':'oee-red';
+    return `<div style="background:var(--surface2);border-radius:8px;padding:10px;border:1px solid var(--border)">
+      <div style="font-size:12px;font-weight:600;margin-bottom:6px">เครื่อง ${m}</div>
+      <div class="oee-bar-wrap">
+        <div class="oee-bar-label"><span>OEE</span><span>${oee.toFixed(1)}%</span></div>
+        <div class="oee-bar"><div class="oee-fill ${cls}" style="width:${Math.min(oee,100)}%"></div></div>
+      </div>
+      <div style="font-size:10px;color:var(--text2);margin-top:4px">A:${(avail*100).toFixed(0)}% P:${(perf*100).toFixed(0)}% Q:${(quality*100).toFixed(0)}%</div>
+    </div>`;
+  }).join('');
+}
+function renderTrendChart(records) {
+  const days=7, labels=[], values=[];
+  for (let i=days-1;i>=0;i--) {
+    const d=new Date(); d.setDate(d.getDate()-i);
+    const ds=d.toISOString().slice(0,10);
+    labels.push(ds.slice(5));
+    const dr=records.filter(r=>r.date===ds);
+    const p=dr.reduce((s,r)=>s+r.prodQty,0), w=dr.reduce((s,r)=>s+r.wasteQty,0);
+    values.push(p>0?(w/p*100):0);
+  }
+  drawLineChart('trendChart',labels,[{values,color:'#c0392b'}]);
+}
+function renderMachineChart(records) {
+  const labels=[], values=[];
+  MACHINE_LIST.forEach(m=>{
+    const mr=records.filter(r=>r.machine===m);
+    const p=mr.reduce((s,r)=>s+r.prodQty,0), w=mr.reduce((s,r)=>s+r.wasteQty,0);
+    labels.push('M'+m); values.push(p>0?(w/p*100):0);
+  });
+  drawBarChart('machineChart',labels,values,'',CHART_COLORS);
+}
+function renderDonutChart(records) {
+  const counts={};
+  WASTE_TYPES.forEach(t=>counts[t]=0);
+  records.forEach(r=>{ if(counts[r.wasteType]!==undefined) counts[r.wasteType]+=r.wasteQty; });
+  const labels=Object.keys(counts).filter(k=>counts[k]>0);
+  const values=labels.map(k=>counts[k]);
+  drawDonutChart('donutChart',labels,values,'ของเสีย');
+}
+function renderParetoChart(records) {
+  const counts={};
+  WASTE_TYPES.forEach(t=>counts[t]=0);
+  records.forEach(r=>{ if(counts[r.wasteType]!==undefined) counts[r.wasteType]+=r.wasteQty; });
+  const sorted=Object.entries(counts).filter(([,v])=>v>0).sort((a,b)=>b[1]-a[1]);
+  drawBarChart('paretoChart',sorted.map(s=>s[0].slice(0,4)),sorted.map(s=>s[1]),'',CHART_COLORS);
+}
+function renderShiftChart(records) {
+  const shifts=['เช้า','บ่าย','ดึก'];
+  const values=shifts.map(s=>{
+    const sr=records.filter(r=>r.shift===s);
+    const p=sr.reduce((a,r)=>a+r.prodQty,0), w=sr.reduce((a,r)=>a+r.wasteQty,0);
+    return p>0?(w/p*100):0;
+  });
+  drawBarChart('shiftChart',shifts,values,'',['#c0392b','#f39c12','#2980b9']);
+}
+function renderScatterChart(records) {
+  const cfg=getConfig();
+  const points=records.map(r=>({x:r.prodQty,y:r.wasteRate,color:r.wasteRate>cfg.target?'#c0392b':'#27ae60'}));
+  drawScatterChart('scatterChart',points,'');
+}
+function renderTop5(records) {
+  const el=document.getElementById('top5List');
+  if (!el) return;
+  const machineRates=MACHINE_LIST.map(m=>{
+    const mr=records.filter(r=>r.machine===m);
+    const p=mr.reduce((s,r)=>s+r.prodQty,0), w=mr.reduce((s,r)=>s+r.wasteQty,0);
+    return {machine:m, rate:p>0?(w/p*100):0};
+  }).sort((a,b)=>b.rate-a.rate).slice(0,5);
+  el.innerHTML=machineRates.map((m,i)=>`
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+      <span style="font-size:18px;font-weight:700;color:var(--accent);width:24px">${i+1}</span>
+      <span style="width:70px">เครื่อง ${m.machine}</span>
+      <div style="flex:1"><div class="progress-bar"><div class="progress-fill" style="width:${Math.min(m.rate*10,100)}%;background:${m.rate>3?'var(--red)':'var(--green)'}"></div></div></div>
+      <span style="font-weight:600;color:${m.rate>3?'var(--red)':'var(--green)'}">${m.rate.toFixed(2)}%</span>
+    </div>`).join('');
+}
+function renderMachineStatusBars(records, cfg) {
+  const el=document.getElementById('machineStatusBars');
+  if (!el) return;
+  const today=new Date().toISOString().slice(0,10);
+  el.innerHTML=MACHINE_LIST.map(m=>{
+    const mr=records.filter(r=>r.date===today&&r.machine===m);
+    const p=mr.reduce((s,r)=>s+r.prodQty,0), w=mr.reduce((s,r)=>s+r.wasteQty,0);
+    const rate=p>0?(w/p*100):0;
+    const cls=rate>cfg.target?'oee-red':rate>cfg.target*0.8?'oee-yellow':'oee-green';
+    return `<div class="oee-bar-wrap">
+      <div class="oee-bar-label"><span>เครื่อง ${m}</span><span>${rate.toFixed(2)}%</span></div>
+      <div class="oee-bar"><div class="oee-fill ${cls}" style="width:${Math.min(rate/cfg.target*50,100)}%"></div></div>
+    </div>`;
+  }).join('');
+}
+</script>
+
+<script>
+// ===== ANALYSIS TAB =====
+function renderAnalysis() {
+  const records = getRecords();
+  renderSPCChart(records);
+  renderMonthChart(records);
+  renderSupplierChart(records);
+  renderLotChart(records);
+  renderInsights(records);
+  renderFiveWhyTable(records);
+  renderFishboneTable(records);
+  renderAuditLog();
+  // Populate fishbone filters
+  const fm = document.getElementById('fishbone_filterMachine');
+  const fw = document.getElementById('fishbone_filterWaste');
+  if (fm && fm.options.length <= 1) {
+    MACHINE_LIST.forEach(m => { const o=document.createElement('option'); o.value=m; o.textContent='เครื่อง '+m; fm.appendChild(o); });
+  }
+  if (fw && fw.options.length <= 1) {
+    WASTE_TYPES.forEach(t => { const o=document.createElement('option'); o.value=t; o.textContent=t; fw.appendChild(o); });
+  }
+}
+function renderSPCChart(records) {
+  const sorted = [...records].sort((a,b)=>a.date.localeCompare(b.date));
+  const labels = sorted.map(r=>r.date.slice(5));
+  const values = sorted.map(r=>r.wasteRate);
+  if (!values.length) return;
+  const mean = values.reduce((s,v)=>s+v,0)/values.length;
+  const std = Math.sqrt(values.reduce((s,v)=>s+(v-mean)**2,0)/values.length);
+  const ucl = mean+3*std, lcl = Math.max(0,mean-3*std);
+  const ctx = clearCanvas('spcChart');
+  if (!ctx) return;
+  const c = document.getElementById('spcChart');
+  const W=c.width, H=c.height, pad=45, padTop=30, padRight=20;
+  const tc = getThemeColors();
+  const max = Math.max(ucl*1.1,1);
+  const xStep = labels.length>1?(W-pad-padRight)/(labels.length-1):1;
+  // UCL/LCL lines
+  [[ucl,'#c0392b','UCL'],[mean,'#2980b9','Mean'],[lcl,'#27ae60','LCL']].forEach(([v,col,lbl])=>{
+    const y=padTop+(H-padTop-30)*(1-v/max);
+    ctx.strokeStyle=col; ctx.setLineDash([5,5]); ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(pad,y); ctx.lineTo(W-padRight,y); ctx.stroke();
+    ctx.setLineDash([]); ctx.fillStyle=col; ctx.font='10px Segoe UI'; ctx.textAlign='left';
+    ctx.fillText(`${lbl}:${v.toFixed(2)}`,W-padRight-60,y-3);
+  });
+  // Data line
+  ctx.strokeStyle='#c0392b'; ctx.lineWidth=2; ctx.beginPath();
+  values.forEach((v,i)=>{
+    const x=pad+i*xStep, y=padTop+(H-padTop-30)*(1-v/max);
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.stroke();
+  values.forEach((v,i)=>{
+    const x=pad+i*xStep, y=padTop+(H-padTop-30)*(1-v/max);
+    ctx.fillStyle=v>ucl?'#c0392b':'#2980b9';
+    ctx.beginPath(); ctx.arc(x,y,3,0,Math.PI*2); ctx.fill();
+  });
+  ctx.strokeStyle=tc.grid; ctx.beginPath(); ctx.moveTo(pad,padTop); ctx.lineTo(pad,H-30); ctx.lineTo(W-padRight,H-30); ctx.stroke();
+  ctx.fillStyle=tc.text; ctx.font='10px Segoe UI'; ctx.textAlign='center';
+  const step=Math.max(1,Math.floor(labels.length/8));
+  labels.forEach((l,i)=>{ if(i%step===0) ctx.fillText(l,pad+i*xStep,H-14); });
+}
+function renderMonthChart(records) {
+  const months={};
+  records.forEach(r=>{
+    const m=r.date.slice(0,7);
+    if (!months[m]) months[m]={prod:0,waste:0};
+    months[m].prod+=r.prodQty; months[m].waste+=r.wasteQty;
+  });
+  const labels=Object.keys(months).sort().slice(-6);
+  const values=labels.map(m=>months[m].prod>0?(months[m].waste/months[m].prod*100):0);
+  drawBarChart('monthChart',labels,values,'',CHART_COLORS);
+}
+function renderSupplierChart(records) {
+  const suppliers={};
+  records.forEach(r=>{
+    if (!r.supplier) return;
+    if (!suppliers[r.supplier]) suppliers[r.supplier]={prod:0,waste:0};
+    suppliers[r.supplier].prod+=r.prodQty; suppliers[r.supplier].waste+=r.wasteQty;
+  });
+  const entries=Object.entries(suppliers).map(([k,v])=>({label:k,rate:v.prod>0?(v.waste/v.prod*100):0})).sort((a,b)=>b.rate-a.rate).slice(0,8);
+  drawBarChart('supplierChart',entries.map(e=>e.label.slice(0,8)),entries.map(e=>e.rate),'',CHART_COLORS);
+}
+function renderLotChart(records) {
+  const lots={};
+  records.forEach(r=>{
+    if (!r.lotNo) return;
+    if (!lots[r.lotNo]) lots[r.lotNo]={prod:0,waste:0};
+    lots[r.lotNo].prod+=r.prodQty; lots[r.lotNo].waste+=r.wasteQty;
+  });
+  const entries=Object.entries(lots).map(([k,v])=>({label:k,rate:v.prod>0?(v.waste/v.prod*100):0})).sort((a,b)=>b.rate-a.rate).slice(0,8);
+  if (!entries.length) {
+    const ctx=clearCanvas('lotChart'); if(!ctx) return;
+    const c=document.getElementById('lotChart');
+    const tc=getThemeColors();
+    ctx.fillStyle=tc.text; ctx.font='13px Segoe UI'; ctx.textAlign='center';
+    ctx.fillText('ยังไม่มีข้อมูล Lot วัตถุดิบ',c.width/2,c.height/2);
+    return;
+  }
+  drawBarChart('lotChart',entries.map(e=>e.label.slice(0,10)),entries.map(e=>e.rate),'',CHART_COLORS);
+}
+function renderInsights(records) {
+  const el=document.getElementById('insightsPanel');
+  if (!el) return;
+  const cfg=getConfig();
+  const insights=[];
+  if (!records.length) { el.innerHTML='<div style="color:var(--text2)">ยังไม่มีข้อมูลเพียงพอ</div>'; return; }
+  const totalProd=records.reduce((s,r)=>s+r.prodQty,0);
+  const totalWaste=records.reduce((s,r)=>s+r.wasteQty,0);
+  const avgRate=totalProd>0?(totalWaste/totalProd*100):0;
+  if (avgRate>cfg.target) insights.push({type:'danger',msg:`อัตราของเสียเฉลี่ย ${avgRate.toFixed(2)}% เกินเป้าหมาย ${cfg.target}%`});
+  else insights.push({type:'ok',msg:`อัตราของเสียเฉลี่ย ${avgRate.toFixed(2)}% อยู่ในเป้าหมาย`});
+  const machineRates=MACHINE_LIST.map(m=>{
+    const mr=records.filter(r=>r.machine===m);
+    const p=mr.reduce((s,r)=>s+r.prodQty,0), w=mr.reduce((s,r)=>s+r.wasteQty,0);
+    return {m, rate:p>0?(w/p*100):0};
+  }).filter(x=>x.rate>0).sort((a,b)=>b.rate-a.rate);
+  if (machineRates.length) insights.push({type:'warn',msg:`เครื่องที่มีของเสียสูงสุด: เครื่อง ${machineRates[0].m} (${machineRates[0].rate.toFixed(2)}%)`});
+  const typeCounts={};
+  records.forEach(r=>{ typeCounts[r.wasteType]=(typeCounts[r.wasteType]||0)+r.wasteQty; });
+  const topType=Object.entries(typeCounts).sort((a,b)=>b[1]-a[1])[0];
+  if (topType) insights.push({type:'info',msg:`ประเภทของเสียที่พบมากสุด: ${topType[0]} (${topType[1].toFixed(1)} kg)`});
+  el.innerHTML=insights.map(i=>`<div class="alert-banner ${i.type==='danger'?'danger':i.type==='ok'?'':i.type==='warn'?'warn':''}">
+    ${i.type==='danger'?'⚠️':i.type==='ok'?'✅':i.type==='warn'?'⚡':'ℹ️'} ${i.msg}
+  </div>`).join('');
+}
+// ===== FISHBONE =====
+function renderFishboneTable(records) {
+  const tbody = document.getElementById('fishboneTbody');
+  if (!tbody) return;
+
+  // Filter UI
+  const filterM = document.getElementById('fishbone_filterMachine')?.value || '';
+  const filterW = document.getElementById('fishbone_filterWaste')?.value || '';
+  const filterQ = document.getElementById('fishbone_search')?.value?.toLowerCase() || '';
+
+  let filtered = records.filter(r => r.m5_man||r.m5_machine||r.m5_material||r.m5_method||r.m5_measurement||r.m5_environment);
+  if (filterM) filtered = filtered.filter(r => r.machine == filterM);
+  if (filterW) filtered = filtered.filter(r => r.wasteType === filterW);
+  if (filterQ) filtered = filtered.filter(r => JSON.stringify(r).toLowerCase().includes(filterQ));
+
+  if (!filtered.length) {
+    tbody.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--text2)">ยังไม่มีการวิเคราะห์ 5M1E</td></tr>';
+    return;
+  }
+
+  // Auto summary — หาสาเหตุที่พบบ่อยสุดในแต่ละ M
+  const summaryEl = document.getElementById('fishboneSummary');
+  if (summaryEl) {
+    const cats = ['m5_man','m5_machine','m5_material','m5_method','m5_measurement','m5_environment'];
+    const labels = {m5_man:'Man',m5_machine:'Machine',m5_material:'Material',m5_method:'Method',m5_measurement:'Measurement',m5_environment:'Environment'};
+    const summary = cats.map(c => {
+      const vals = filtered.map(r=>r[c]).filter(v=>v).join(',').split(/[,，\n]/).map(v=>v.trim()).filter(v=>v);
+      if (!vals.length) return null;
+      const freq = {};
+      vals.forEach(v=>{ freq[v]=(freq[v]||0)+1; });
+      const top = Object.entries(freq).sort((a,b)=>b[1]-a[1])[0];
+      return top ? `<span style="font-weight:600;color:var(--accent)">${labels[c]}:</span> ${top[0]} (${top[1]} ครั้ง)` : null;
+    }).filter(Boolean);
+    summaryEl.innerHTML = summary.length
+      ? `<div style="font-size:12px;line-height:1.8">${summary.join(' &nbsp;|&nbsp; ')}</div>`
+      : '<div style="color:var(--text2);font-size:12px">ยังไม่มีข้อมูลเพียงพอ</div>';
+  }
+
+  tbody.innerHTML = filtered.map(r=>`<tr>
+    <td>${r.date}</td>
+    <td>เครื่อง ${r.machine}</td>
+    <td>${r.wasteType}</td>
+    <td style="max-width:90px;white-space:normal;font-size:11px">${r.m5_man||'-'}</td>
+    <td style="max-width:90px;white-space:normal;font-size:11px">${r.m5_machine||'-'}</td>
+    <td style="max-width:90px;white-space:normal;font-size:11px">${r.m5_material||'-'}</td>
+    <td style="max-width:90px;white-space:normal;font-size:11px">${r.m5_method||'-'}</td>
+    <td style="max-width:90px;white-space:normal;font-size:11px">${r.m5_measurement||'-'}</td>
+    <td style="max-width:90px;white-space:normal;font-size:11px">${r.m5_environment||'-'}</td>
+    <td><button class="btn btn-sm" style="background:#2980b9;color:#fff" onclick="showFishbone('${r.id}')">&#x1F41F;</button></td>
+  </tr>`).join('');
+}
+
+function previewFishbone() {
+  const data = {
+    problem: document.getElementById('f_5m_problem')?.value || document.getElementById('f_wasteType')?.value || 'ของเสีย',
+    machine: document.getElementById('f_machine')?.value || '',
+    date: document.getElementById('f_date')?.value || '',
+    m5_man: document.getElementById('f_5m_man')?.value || '',
+    m5_machine: document.getElementById('f_5m_machine')?.value || '',
+    m5_material: document.getElementById('f_5m_material')?.value || '',
+    m5_method: document.getElementById('f_5m_method')?.value || '',
+    m5_measurement: document.getElementById('f_5m_measurement')?.value || '',
+    m5_environment: document.getElementById('f_5m_environment')?.value || ''
+  };
+  openFishboneModal(data);
+}
+
+function showFishbone(id) {
+  const r = getRecords().find(x=>x.id===id);
+  if (!r) return;
+  openFishboneModal({
+    problem: r.m5_problem || r.wasteType || 'ของเสีย',
+    machine: 'เครื่อง '+r.machine,
+    date: r.date,
+    m5_man: r.m5_man||'',
+    m5_machine: r.m5_machine||'',
+    m5_material: r.m5_material||'',
+    m5_method: r.m5_method||'',
+    m5_measurement: r.m5_measurement||'',
+    m5_environment: r.m5_environment||''
+  });
+}
+
+function openFishboneModal(data) {
+  const info = document.getElementById('fishboneInfo');
+  if (info) info.textContent = `ปัญหา: ${data.problem} | ${data.machine} | ${data.date}`;
+  document.getElementById('fishboneModal').style.display='flex';
+  setTimeout(()=>drawFishbone(data), 100);
+}
+
+function drawFishbone(data) {
+  const canvas = document.getElementById('fishboneCanvas');
+  if (!canvas) return;
+  const W = Math.max(canvas.parentElement.clientWidth - 48, 900);
+  const H = 560;
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+
+  // Helper: wrap text
+  function wrapText(text, x, y, maxWidth, lineHeight, maxLines) {
+    if (!text) return;
+    const items = text.split(/[,，\n]/).map(s=>s.trim()).filter(s=>s);
+    let line = 0;
+    items.forEach(item => {
+      if (line >= maxLines) return;
+      // split long words
+      const words = item.split(' ');
+      let cur = '';
+      words.forEach(w => {
+        const test = cur ? cur+' '+w : w;
+        if (ctx.measureText(test).width > maxWidth && cur) {
+          if (line < maxLines) { ctx.fillText(cur, x, y + line*lineHeight); line++; }
+          cur = w;
+        } else { cur = test; }
+      });
+      if (cur && line < maxLines) { ctx.fillText(cur, x, y + line*lineHeight); line++; }
+    });
+  }
+
+  // Background
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0,0,W,H);
+
+  // Title
+  ctx.fillStyle = '#2c3e50'; ctx.font = 'bold 15px Arial'; ctx.textAlign = 'center';
+  ctx.fillText(`Fishbone Diagram (5M1E) — ${data.problem || 'ปัญหา'}`, W/2, 24);
+  ctx.font = '11px Arial'; ctx.fillStyle = '#888';
+  ctx.fillText(`${data.machine || ''} | ${data.date || ''}`, W/2, 40);
+
+  const cy = H*0.5 + 10;
+  const headX = W - 70;
+  const tailX = 50;
+
+  // Main spine
+  ctx.strokeStyle = '#2c3e50'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.moveTo(tailX, cy); ctx.lineTo(headX, cy); ctx.stroke();
+
+  // Fish head
+  ctx.fillStyle = '#c0392b';
+  ctx.beginPath();
+  ctx.moveTo(headX, cy-24); ctx.lineTo(headX+50, cy); ctx.lineTo(headX, cy+24);
+  ctx.closePath(); ctx.fill();
+  ctx.fillStyle = '#fff'; ctx.font = 'bold 10px Arial'; ctx.textAlign = 'center';
+  const prob = (data.problem||'ปัญหา').slice(0,12);
+  ctx.fillText(prob, headX+25, cy+4);
+
+  const bones = [
+    { label:'Man (คน/พนักงาน)', key:'m5_man',         x:W*0.18, top:true,  color:'#8e44ad' },
+    { label:'Machine (เครื่องจักร)', key:'m5_machine', x:W*0.42, top:true,  color:'#2980b9' },
+    { label:'Material (วัตถุดิบ)', key:'m5_material',  x:W*0.66, top:true,  color:'#27ae60' },
+    { label:'Method (วิธีการ)', key:'m5_method',       x:W*0.18, top:false, color:'#e67e22' },
+    { label:'Measurement (การวัด)', key:'m5_measurement', x:W*0.42, top:false, color:'#c0392b' },
+    { label:'Environment (สภาพแวดล้อม)', key:'m5_environment', x:W*0.66, top:false, color:'#16a085' }
+  ];
+
+  const boneLen = 110;
+  const labelH = 24;
+  const contentMaxW = 130;
+  const lineH = 14;
+  const maxLines = 6;
+
+  bones.forEach(b => {
+    const boneY = b.top ? cy - boneLen : cy + boneLen;
+    const midX = b.x;
+    const joinX = midX + (b.top ? 55 : 55);
+
+    // Diagonal bone line
+    ctx.strokeStyle = b.color; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(midX, boneY); ctx.lineTo(joinX, cy); ctx.stroke();
+
+    // Label box
+    ctx.font = 'bold 10px Arial';
+    const lw = Math.min(ctx.measureText(b.label).width + 18, 170);
+    const lx = midX - lw/2;
+    const ly = b.top ? boneY - labelH - 4 : boneY + 4;
+    ctx.fillStyle = b.color;
+    if (ctx.roundRect) ctx.roundRect(lx, ly, lw, labelH, 4);
+    else ctx.rect(lx, ly, lw, labelH);
+    ctx.fill();
+    ctx.fillStyle = '#fff'; ctx.textAlign = 'center';
+    ctx.fillText(b.label, midX, ly + 15);
+
+    // Content text with wrap
+    const content = data[b.key] || '';
+    if (content) {
+      ctx.fillStyle = '#333'; ctx.font = '10px Arial'; ctx.textAlign = 'center';
+      const startY = b.top
+        ? ly - 4                          // บรรทัดบน: เริ่มจากด้านบน label ขึ้นไป
+        : ly + labelH + lineH + 2;        // บรรทัดล่าง: เริ่มใต้ label
+      if (b.top) {
+        // นับจากล่างขึ้นบน (ชิด label)
+        const items = content.split(/[,，\n]/).map(s=>s.trim()).filter(s=>s).slice(0, maxLines);
+        items.reverse().forEach((item, i) => {
+          ctx.fillText(item.slice(0, 22), midX, startY - i * lineH);
+        });
+      } else {
+        wrapText(content, midX, startY, contentMaxW, lineH, maxLines);
+      }
+    }
+  });
+}
+
+function saveFishboneImage() {
+  const canvas = document.getElementById('fishboneCanvas');
+  const a = document.createElement('a');
+  a.href = canvas.toDataURL('image/png');
+  a.download = 'fishbone_'+new Date().toISOString().slice(0,10)+'.png';
+  a.click();
+}
+
+function renderFiveWhyTable(records) {
+  const tbody=document.getElementById('fiveWhyTbody');
+  if (!tbody) return;
+  const filtered=records.filter(r=>r.why1||r.rootCause);
+  tbody.innerHTML=filtered.map(r=>`
+    <tr>
+      <td>${r.date}</td>
+      <td>เครื่อง ${r.machine}</td>
+      <td>${r.wasteType}</td>
+      <td style="max-width:120px;white-space:normal;font-size:11px">${r.rootCause||'-'}</td>
+      <td style="max-width:120px;white-space:normal;font-size:11px">${r.why1||'-'}</td>
+      <td style="max-width:120px;white-space:normal;font-size:11px">${r.why2||'-'}</td>
+      <td style="max-width:120px;white-space:normal;font-size:11px">${r.why3||'-'}</td>
+      <td style="max-width:120px;white-space:normal;font-size:11px">${r.why4||'-'}</td>
+      <td style="max-width:120px;white-space:normal;font-size:11px">${r.why5||'-'}</td>
+    </tr>`).join('');
+}
+
+// ===== REPORT =====
+function updateReportDates() {
+  const period=document.getElementById('rpt_period')?.value;
+  const now=new Date();
+  let from='', to=now.toISOString().slice(0,10);
+  if (period==='today') { from=to; }
+  else if (period==='week') { const d=new Date(now); d.setDate(d.getDate()-6); from=d.toISOString().slice(0,10); }
+  else if (period==='month') { from=now.toISOString().slice(0,7)+'-01'; }
+  const fe=document.getElementById('rpt_from'), te=document.getElementById('rpt_to');
+  if (fe&&period!=='custom') fe.value=from;
+  if (te&&period!=='custom') te.value=to;
+}
+function generateReport() {
+  const from=document.getElementById('rpt_from').value;
+  const to=document.getElementById('rpt_to').value;
+  let records=getRecords();
+  if (from) records=records.filter(r=>r.date>=from);
+  if (to) records=records.filter(r=>r.date<=to);
+  const totalProd=records.reduce((s,r)=>s+r.prodQty,0);
+  const totalWaste=records.reduce((s,r)=>s+r.wasteQty,0);
+  const avgRate=totalProd>0?(totalWaste/totalProd*100).toFixed(2):0;
+  const cfg=getConfig();
+
+  // Week-over-week comparison
+  const now = new Date();
+  const thisWeekStart = new Date(now); thisWeekStart.setDate(now.getDate()-now.getDay()+1); thisWeekStart.setHours(0,0,0,0);
+  const lastWeekStart = new Date(thisWeekStart); lastWeekStart.setDate(thisWeekStart.getDate()-7);
+  const lastWeekEnd = new Date(thisWeekStart); lastWeekEnd.setDate(thisWeekStart.getDate()-1);
+  const allRecords = getRecords();
+  const thisWeekRecs = allRecords.filter(r=>r.date>=thisWeekStart.toISOString().slice(0,10));
+  const lastWeekRecs = allRecords.filter(r=>r.date>=lastWeekStart.toISOString().slice(0,10)&&r.date<=lastWeekEnd.toISOString().slice(0,10));
+  const twProd=thisWeekRecs.reduce((s,r)=>s+r.prodQty,0), twWaste=thisWeekRecs.reduce((s,r)=>s+r.wasteQty,0);
+  const lwProd=lastWeekRecs.reduce((s,r)=>s+r.prodQty,0), lwWaste=lastWeekRecs.reduce((s,r)=>s+r.wasteQty,0);
+  const twRate=twProd>0?(twWaste/twProd*100).toFixed(2):0;
+  const lwRate=lwProd>0?(lwWaste/lwProd*100).toFixed(2):0;
+  const weekTrend = parseFloat(twRate)<parseFloat(lwRate)?'&#x2B07; ดีขึ้น':'&#x2B06; แย่ลง';
+  const weekColor = parseFloat(twRate)<parseFloat(lwRate)?'#27ae60':'#c0392b';
+
+  const machineStats=MACHINE_LIST.map(m=>{
+    const mr=records.filter(r=>r.machine===m);
+    const p=mr.reduce((s,r)=>s+r.prodQty,0), w=mr.reduce((s,r)=>s+r.wasteQty,0);
+    const tgt=getMachineTarget(m);
+    return {m, count:mr.length, prod:p, waste:w, rate:p>0?(w/p*100):0, target:tgt};
+  }).filter(x=>x.count>0);
+
+  const el=document.getElementById('reportOutput');
+  el.innerHTML=`
+    <div class="card" id="reportContent">
+      <div style="text-align:center;margin-bottom:20px">
+        <div style="font-size:20px;font-weight:700;color:var(--accent)">RMUTR × SSW1988</div>
+        <div style="font-size:16px;font-weight:600;margin-top:4px">รายงานของเสีย HDPE</div>
+        <div style="color:var(--text2);font-size:13px">ช่วงเวลา: ${from||'ทั้งหมด'} ถึง ${to||'ทั้งหมด'}</div>
+        <div style="color:var(--text2);font-size:12px">สร้างเมื่อ: ${new Date().toLocaleString('th-TH')}</div>
+      </div>
+      <div class="grid-4" style="margin-bottom:20px">
+        <div class="kpi-card"><div class="kpi-val">${records.length}</div><div class="kpi-label">จำนวนบันทึก</div></div>
+        <div class="kpi-card"><div class="kpi-val">${totalProd.toFixed(1)}</div><div class="kpi-label">ผลผลิตรวม (kg)</div></div>
+        <div class="kpi-card"><div class="kpi-val">${totalWaste.toFixed(1)}</div><div class="kpi-label">ของเสียรวม (kg)</div></div>
+        <div class="kpi-card"><div class="kpi-val">${avgRate}%</div><div class="kpi-label">อัตราของเสียเฉลี่ย</div></div>
+      </div>
+
+      <!-- Week-over-week comparison -->
+      <div style="background:var(--surface2);border-radius:10px;padding:16px;margin-bottom:20px;border:1px solid var(--border)">
+        <div style="font-size:14px;font-weight:700;margin-bottom:12px">&#x1F4C5; เปรียบเทียบสัปดาห์นี้ vs สัปดาห์ที่แล้ว</div>
+        <div class="grid-4">
+          <div style="text-align:center"><div style="font-size:11px;color:var(--text2)">สัปดาห์นี้ (ผลิต)</div><div style="font-size:20px;font-weight:700">${twProd.toFixed(1)} kg</div></div>
+          <div style="text-align:center"><div style="font-size:11px;color:var(--text2)">สัปดาห์นี้ (อัตราของเสีย)</div><div style="font-size:20px;font-weight:700;color:${weekColor}">${twRate}%</div></div>
+          <div style="text-align:center"><div style="font-size:11px;color:var(--text2)">สัปดาห์ที่แล้ว (อัตราของเสีย)</div><div style="font-size:20px;font-weight:700">${lwRate}%</div></div>
+          <div style="text-align:center"><div style="font-size:11px;color:var(--text2)">แนวโน้ม</div><div style="font-size:20px;font-weight:700;color:${weekColor}">${weekTrend}</div></div>
+        </div>
+      </div>
+
+      <div class="card-title">สรุปตามเครื่องจักร</div>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th>เครื่อง</th><th>จำนวนบันทึก</th><th>ผลผลิต (kg)</th><th>ของเสีย (kg)</th><th>อัตรา%</th><th>เป้าหมาย</th><th>สถานะ</th></tr></thead>
+          <tbody>${machineStats.map(s=>`
+            <tr>
+              <td>เครื่อง ${s.m}</td>
+              <td>${s.count}</td>
+              <td>${s.prod.toFixed(1)}</td>
+              <td>${s.waste.toFixed(1)}</td>
+              <td>${s.rate.toFixed(2)}%</td>
+              <td>${s.target}%</td>
+              <td><span class="${s.rate>s.target?'badge-danger':s.rate>s.target*0.8?'badge-warn':'badge-ok'}">${s.rate>s.target?'เกินเป้า':s.rate>s.target*0.8?'ใกล้เป้า':'ปกติ'}</span></td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+}
+
+// ===== SETTINGS SUMMARY CANVAS =====
+function renderSummaryCanvas() {
+  const records=getRecords();
+  const ctx=clearCanvas('summaryCanvas');
+  if (!ctx) return;
+  const c=document.getElementById('summaryCanvas');
+  const W=c.width, H=c.height;
+  const tc=getThemeColors();
+  ctx.fillStyle=tc.bg; ctx.fillRect(0,0,W,H);
+  ctx.fillStyle=tc.text; ctx.font='bold 14px Segoe UI'; ctx.textAlign='center';
+  ctx.fillText('RMUTR × SSW1988 — HDPE Summary',W/2,20);
+  const totalProd=records.reduce((s,r)=>s+r.prodQty,0);
+  const totalWaste=records.reduce((s,r)=>s+r.wasteQty,0);
+  const avgRate=totalProd>0?(totalWaste/totalProd*100).toFixed(2):0;
+  ctx.font='12px Segoe UI'; ctx.textAlign='left';
+  ctx.fillText(`จำนวนบันทึก: ${records.length}`,20,45);
+  ctx.fillText(`ผลผลิตรวม: ${totalProd.toFixed(1)} kg`,20,65);
+  ctx.fillText(`ของเสียรวม: ${totalWaste.toFixed(1)} kg`,20,85);
+  ctx.fillText(`อัตราเฉลี่ย: ${avgRate}%`,20,105);
+  ctx.fillText(`สร้างเมื่อ: ${new Date().toLocaleString('th-TH')}`,20,125);
+}
+function saveSummaryImage() {
+  renderSummaryCanvas();
+  const c=document.getElementById('summaryCanvas');
+  const a=document.createElement('a');
+  a.href=c.toDataURL('image/png');
+  a.download='hdpe_summary.png';
+  a.click();
+}
+
+// ===== TV MODE =====
+function enterTvMode() {
+  document.getElementById('tvMode').classList.add('active');
+  document.body.style.overflow='hidden';
+  renderTvDashboard();
+  tvInterval=setInterval(renderTvDashboard,30000);
+}
+function exitTvMode() {
+  document.getElementById('tvMode').classList.remove('active');
+  document.body.style.overflow='';
+  if (tvInterval) { clearInterval(tvInterval); tvInterval=null; }
+}
+function renderTvDashboard() {
+  const records=getRecords();
+  const cfg=getConfig();
+  const today=new Date().toISOString().slice(0,10);
+  const thisMonth=today.slice(0,7);
+  const todayRecs=records.filter(r=>r.date===today);
+  const monthRecs=records.filter(r=>r.date.startsWith(thisMonth));
+  const totalWaste=monthRecs.reduce((s,r)=>s+r.wasteQty,0);
+  const totalProd=monthRecs.reduce((s,r)=>s+r.prodQty,0);
+  const avgRate=totalProd>0?(totalWaste/totalProd*100).toFixed(2):0;
+  const dtHours=getTotalDowntimeThisMonth();
+  const kpiGrid=document.getElementById('tvKpiGrid');
+  if (kpiGrid) kpiGrid.innerHTML=`
+    <div class="tv-kpi"><div class="tv-kpi-val">${todayRecs.length}</div><div class="tv-kpi-label">บันทึกวันนี้</div></div>
+    <div class="tv-kpi"><div class="tv-kpi-val">${avgRate}%</div><div class="tv-kpi-label">อัตราของเสียเดือนนี้</div></div>
+    <div class="tv-kpi"><div class="tv-kpi-val">${totalWaste.toFixed(1)}</div><div class="tv-kpi-label">ของเสียรวม (kg)</div></div>
+    <div class="tv-kpi"><div class="tv-kpi-val" style="color:#f39c12">${dtHours.toFixed(1)}</div><div class="tv-kpi-label">Downtime (ชม.)</div></div>`;
+  // TV Trend Chart
+  const days=7, labels=[], values=[];
+  for (let i=days-1;i>=0;i--) {
+    const d=new Date(); d.setDate(d.getDate()-i);
+    const ds=d.toISOString().slice(0,10);
+    labels.push(ds.slice(5));
+    const dr=records.filter(r=>r.date===ds);
+    const p=dr.reduce((s,r)=>s+r.prodQty,0), w=dr.reduce((s,r)=>s+r.wasteQty,0);
+    values.push(p>0?(w/p*100):0);
+  }
+  const tvCtx=clearCanvas('tvTrendChart');
+  if (tvCtx) {
+    const c=document.getElementById('tvTrendChart');
+    c.width=c.parentElement.clientWidth-32;
+    drawLineChart('tvTrendChart',labels,[{values,color:'#c0392b'}]);
+  }
+  // TV Machine Status
+  const msEl=document.getElementById('tvMachineStatus');
+  if (msEl) msEl.innerHTML=MACHINE_LIST.map(m=>{
+    const mr=records.filter(r=>r.date===today&&r.machine===m);
+    const p=mr.reduce((s,r)=>s+r.prodQty,0), w=mr.reduce((s,r)=>s+r.wasteQty,0);
+    const rate=p>0?(w/p*100):0;
+    const cls=rate>cfg.target?'oee-red':rate>cfg.target*0.8?'oee-yellow':'oee-green';
+    return `<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+      <span style="color:#9e9e9e;font-size:12px;width:60px">เครื่อง ${m}</span>
+      <div style="flex:1;background:#2d3561;border-radius:4px;height:10px;overflow:hidden">
+        <div class="oee-fill ${cls}" style="width:${Math.min(rate/cfg.target*50,100)}%;height:100%"></div>
+      </div>
+      <span style="color:#e0e0e0;font-size:12px;width:45px">${rate.toFixed(1)}%</span>
+    </div>`;
+  }).join('');
+  const info=document.getElementById('tvRefreshInfo');
+  if (info) info.textContent=`อัปเดตล่าสุด: ${new Date().toLocaleTimeString('th-TH')} | รีเฟรชทุก 30 วินาที`;
+}
+document.addEventListener('keydown',e=>{
+  // Escape closes any open modal
+  if (e.key==='Escape') {
+    exitTvMode();
+    ['editModal','pinModal','addUserModal','importCSVModal','recipeEditModal','fishboneModal','historyModal'].forEach(id=>{
+      const el=document.getElementById(id);
+      if (el && el.style.display==='flex') closeModal(id);
+    });
+  }
+  // Ctrl+S = บันทึกข้อมูล (เมื่ออยู่หน้าบันทึก)
+  if ((e.ctrlKey||e.metaKey) && e.key==='s') {
+    const panel = document.getElementById('panel-record');
+    if (panel && panel.classList.contains('active')) {
+      e.preventDefault();
+      saveRecord();
+    }
+  }
+  // Ctrl+Z = ล้างฟอร์ม (เมื่ออยู่หน้าบันทึก และไม่ได้ focus input)
+  if ((e.ctrlKey||e.metaKey) && e.key==='z' && e.shiftKey) {
+    const panel = document.getElementById('panel-record');
+    if (panel && panel.classList.contains('active')) {
+      e.preventDefault();
+      if (confirm('ล้างฟอร์มทั้งหมดใช่ไหม?')) clearForm();
+    }
+  }
+});
+
+// ===== SESSION TRACKING =====
+function getDeviceId() {
+  let id = localStorage.getItem('hdpe_device_id');
+  if (!id) {
+    id = 'dev_' + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
+    localStorage.setItem('hdpe_device_id', id);
+  }
+  return id;
+}
+
+async function registerSession(username, deviceId) {
+  try {
+    // Pull latest sessions from cloud
+    await cloudPull();
+    const sessions = load(STORAGE.activeSessions, {});
+    if (!sessions[username]) sessions[username] = [];
+    // Remove expired sessions (older than 8 hours)
+    sessions[username] = sessions[username].filter(s => Date.now() - s.ts < 8*3600*1000);
+    // Add/update this device
+    const existing = sessions[username].findIndex(s => s.deviceId === deviceId);
+    const entry = { deviceId, ts: Date.now(), ua: navigator.userAgent.slice(0,50) };
+    if (existing >= 0) sessions[username][existing] = entry;
+    else sessions[username].push(entry);
+    save(STORAGE.activeSessions, sessions);
+    // Force immediate push
+    if (syncTimeout) clearTimeout(syncTimeout);
+    await cloudPush();
+  } catch(e) {}
+}
+
+async function checkDuplicateSession(username, deviceId) {
+  try {
+    await cloudPull();
+    const sessions = load(STORAGE.activeSessions, {});
+    const userSessions = (sessions[username] || []).filter(s =>
+      s.deviceId !== deviceId && Date.now() - s.ts < 8*3600*1000
+    );
+    if (userSessions.length > 0) {
+      // Detect device type from user agent
+      const getDeviceLabel = (ua) => {
+        if (/iPhone|iPad/.test(ua)) return '📱 iOS';
+        if (/Android/.test(ua)) return '📱 Android';
+        if (/Windows/.test(ua)) return '💻 Windows';
+        if (/Mac/.test(ua)) return '💻 Mac';
+        return '🖥 อุปกรณ์อื่น';
+      };
+      const others = userSessions.map(s => getDeviceLabel(s.ua)).join(', ');
+      showToast(`⚠️ "${username}" กำลังใช้งานอยู่ที่ ${others} ด้วย`, 'warn', 6000);
+    }
+  } catch(e) {}
+}
+
+async function removeSession(username, deviceId) {
+  try {
+    const sessions = load(STORAGE.activeSessions, {});
+    if (sessions[username]) {
+      sessions[username] = sessions[username].filter(s => s.deviceId !== deviceId);
+    }
+    save(STORAGE.activeSessions, sessions);
+    if (syncTimeout) clearTimeout(syncTimeout);
+    await cloudPush();
+  } catch(e) {}
+}
+
+// ===== LOGO =====
+function uploadLogo(event, num) {
+  const file = event.target.files[0];
+  if (!file) return;
+  if (file.size > 300000) { showToast('ไฟล์ใหญ่เกินไป แนะนำไม่เกิน 200KB','warn'); return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    const dataUrl = e.target.result;
+    const key = num===2 ? STORAGE.logo2 : STORAGE.logo;
+    save(key, dataUrl);
+    applyLogo(num, dataUrl);
+    showToast(`อัปโหลดโลโก้ที่ ${num} สำเร็จ`,'success');
+  };
+  reader.readAsDataURL(file);
+}
+function removeLogo(num) {
+  const key = num===2 ? STORAGE.logo2 : STORAGE.logo;
+  save(key, null);
+  applyLogo(num, null);
+  showToast(`ลบโลโก้ที่ ${num} แล้ว`,'success');
+}
+function applyLogo(num, dataUrl) {
+  const headerId = num===2 ? 'headerLogo2' : 'headerLogo';
+  const loginId  = num===2 ? 'loginLogoImg2' : 'loginLogoImg';
+  const previewId= num===2 ? 'previewLogo2' : 'previewLogo';
+  const placeholderId = num===2 ? 'previewLogo2_placeholder' : 'previewLogo_placeholder';
+  const headerEl  = document.getElementById(headerId);
+  const loginEl   = document.getElementById(loginId);
+  const previewEl = document.getElementById(previewId);
+  const phEl      = document.getElementById(placeholderId);
+  if (headerEl)  { headerEl.src=dataUrl||'';  headerEl.style.display=dataUrl?'block':'none'; }
+  if (loginEl)   { loginEl.src=dataUrl||'';   loginEl.style.display=dataUrl?'block':'none'; }
+  if (previewEl) { previewEl.src=dataUrl||''; previewEl.style.display=dataUrl?'block':'none'; }
+  if (phEl)      { phEl.style.display=dataUrl?'none':'block'; }
+}
+function loadLogo() {
+  const d1 = load(STORAGE.logo, null);
+  const d2 = load(STORAGE.logo2, null);
+  if (d1) applyLogo(1, d1);
+  if (d2) applyLogo(2, d2);
+}
+
+// ===== GLOBAL SEARCH =====
+async function manualSync() {
+  showToast('กำลัง Sync...', 'info', 1500);
+  await cloudPull();
+  renderDashboard();
+  renderRecordsTable();
+  showToast('Sync สำเร็จ ✓', 'success');
+}
+
+function globalSearchHandler() {
+  const q = document.getElementById('globalSearch').value.toLowerCase().trim();
+  if (!q) return;
+  const records = getRecords().filter(r=>JSON.stringify(r).toLowerCase().includes(q));
+  const recipes = getRecipes().filter(r=>JSON.stringify(r).toLowerCase().includes(q));
+  const downtime = getDowntime().filter(r=>JSON.stringify(r).toLowerCase().includes(q));
+  if (records.length) {
+    switchTab('records');
+    document.getElementById('flt_search').value = q;
+    applyFilters();
+    showToast(`พบ ${records.length} รายการบันทึก`, 'info');
+  } else if (recipes.length) {
+    switchTab('recipe');
+    showToast(`พบ ${recipes.length} สูตรผลิต`, 'info');
+  } else if (downtime.length) {
+    switchTab('downtime');
+    showToast(`พบ ${downtime.length} รายการ Downtime`, 'info');
+  } else {
+    showToast('ไม่พบข้อมูลที่ค้นหา', 'warn');
+  }
+}
+
+// ===== POPULATE SELECTS =====
+function populateSelects() {
+  MACHINE_LIST.forEach(m=>{
+    ['f_machine','mt_machine','dt_machine','sch_machine','dt_flt_machine'].forEach(id=>{
+      const el=document.getElementById(id);
+      if (el) { const opt=document.createElement('option'); opt.value=m; opt.textContent='เครื่อง '+m; el.appendChild(opt); }
+    });
+  });
+  MACHINE_LIST.forEach(m=>{
+    const el=document.getElementById('flt_machine');
+    if (el) { const opt=document.createElement('option'); opt.value=m; opt.textContent='เครื่อง '+m; el.appendChild(opt); }
+  });
+  WASTE_TYPES.forEach(t=>{
+    const el=document.getElementById('flt_wasteType');
+    if (el) { const opt=document.createElement('option'); opt.value=t; opt.textContent=t; el.appendChild(opt); }
+  });
+}
+
+// ===== INIT =====
+async function initApp() {
+  // Pull latest data from cloud first
+  showToast('กำลังโหลดข้อมูลจาก Cloud...', 'info', 2000);
+  await cloudPull();
+
+  const theme=load(STORAGE.theme,'light');
+  applyTheme(theme);
+  populateSelects();
+  populateTemplateSelect();
+  populateRecipeSelect();
+  document.getElementById('f_date').value=new Date().toISOString().slice(0,10);
+  document.getElementById('mt_datetime').value=new Date().toISOString().slice(0,16);
+  document.getElementById('dt_date').value=new Date().toISOString().slice(0,10);
+  document.getElementById('sch_date').value=new Date().toISOString().slice(0,10);
+  updateReportDates();
+  loadConfigUI();
+  loadLogo();
+  updateMaintenanceBadge();
+  renderDashboard();
+  setupAutoTheme();
+
+  // Auto pull every 30 seconds to stay in sync
+  setInterval(async () => {
+    await cloudPull();
+    if (document.getElementById('panel-dashboard').classList.contains('active')) renderDashboard();
+    if (document.getElementById('panel-records').classList.contains('active')) renderRecordsTable();
+    updateMaintenanceBadge();
+    updateTodayCounter();
+    checkMidnightSnapshot();
+  }, 30000);
+  checkMidnightSnapshot();
+
+  document.addEventListener('keydown',e=>{
+    if (document.getElementById('loginScreen').style.display!=='none') {
+      if (e.key>='0'&&e.key<='9') numpadPress(e.key);
+      else if (e.key==='Backspace') numpadPress('back');
+      else if (e.key==='Escape') numpadPress('clear');
+      else if (e.key==='Enter') doLogin();
+    }
+  });
+}
+// Check session on load
+window.addEventListener('load', checkSession);
+
+// ===== LOAD EXCEL TO FORM =====
+function loadExcelToForm(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const ext = file.name.split('.').pop().toLowerCase();
+
+  function fillFromRow(row) {
+    const set = (id, val) => { const el=document.getElementById(id); if(el&&val!==undefined&&val!=='') el.value=val; };
+    set('f_orderId',    row.orderId    || row['เลขที่ใบสั่งผลิต'] || row['order_id'] || row['Order ID']);
+    set('f_date',       row.date       || row['วันที่'] || row['Date']);
+    set('f_responsible',row.responsible|| row['ผู้รับผิดชอบ'] || row['Responsible']);
+    set('f_supplier',   row.supplier   || row['ซัพพลายเออร์'] || row['Supplier']);
+    set('f_lotNo',      row.lotNo      || row['Lot'] || row['lot_no']);
+    set('f_materialType',row.materialType||row['วัตถุดิบ']||row['Material']);
+    set('f_thickness',  row.thickness  || row['ความหนา'] || row['Thickness']);
+    set('f_zone1',      row.zone1      || row['Zone1'] || row['Zone 1']);
+    set('f_zone2',      row.zone2      || row['Zone2'] || row['Zone 2']);
+    set('f_zone3',      row.zone3      || row['Zone3'] || row['Zone 3']);
+    set('f_flangeTemp', row.flangeTemp || row['Flange'] || row['หน้าแปลน']);
+    set('f_dieTemp',    row.dieTemp    || row['Die']    || row['หัวดาย']);
+    set('f_screwMotor', row.screwMotor || row['Screw']  || row['สกรู']);
+    set('f_thickMotor', row.thickMotor || row['Thickness Motor'] || row['ความหนา Motor']);
+    set('f_prodQty',    row.prodQty    || row['ผลผลิต'] || row['Production'] || row['prod_qty']);
+    set('f_wasteQty',   row.wasteQty   || row['ของเสีย'] || row['Waste'] || row['waste_qty']);
+    set('f_cause',      row.cause      || row['สาเหตุ'] || row['Cause']);
+    set('f_solution',   row.solution   || row['แนวทางแก้ไข'] || row['Solution']);
+    // machine & shift dropdowns
+    const machine = row.machine || row['เครื่อง'] || row['Machine'];
+    if (machine) { const el=document.getElementById('f_machine'); if(el) el.value=parseInt(machine)||''; }
+    const shift = row.shift || row['กะ'] || row['Shift'];
+    if (shift) { const el=document.getElementById('f_shift'); if(el) el.value=shift; }
+    const wasteType = row.wasteType || row['ประเภทของเสีย'] || row['Waste Type'];
+    if (wasteType) { const el=document.getElementById('f_wasteType'); if(el) el.value=wasteType; }
+    updateWastePreview();
+    showToast('โหลดข้อมูลจาก Excel เข้าฟอร์มแล้ว ✓','success');
+    event.target.value = '';
+  }
+
+  if (ext === 'csv') {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const lines = e.target.result.split('\n').filter(l=>l.trim());
+      if (lines.length < 2) { showToast('ไฟล์ CSV ว่างเปล่า','error'); return; }
+      const headers = lines[0].split(',').map(h=>h.replace(/"/g,'').trim());
+      const vals = lines[1].split(',').map(v=>v.replace(/"/g,'').trim());
+      const row = {};
+      headers.forEach((h,i)=>row[h]=vals[i]||'');
+      fillFromRow(row);
+    };
+    reader.readAsText(file,'UTF-8');
+  } else {
+    // Excel — load SheetJS
+    const doRead = () => {
+      const reader = new FileReader();
+      reader.onload = e => {
+        try {
+          const wb = XLSX.read(e.target.result, {type:'array'});
+          const ws = wb.Sheets[wb.SheetNames[0]];
+          const rows = XLSX.utils.sheet_to_json(ws, {defval:''});
+          if (!rows.length) { showToast('ไม่พบข้อมูลในไฟล์','error'); return; }
+          // Show row selector if multiple rows
+          if (rows.length > 1) {
+            showExcelRowSelector(rows, fillFromRow);
+          } else {
+            fillFromRow(rows[0]);
+          }
+        } catch(err) { showToast('ไม่สามารถอ่านไฟล์ Excel ได้','error'); }
+      };
+      reader.readAsArrayBuffer(file);
+    };
+    if (typeof XLSX === 'undefined') {
+      const script = document.createElement('script');
+      script.src = 'https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js';
+      script.onload = doRead;
+      document.head.appendChild(script);
+    } else { doRead(); }
+  }
+}
+
+function showExcelRowSelector(rows, fillFromRow) {
+  // สร้าง modal เลือกแถว
+  const existing = document.getElementById('excelRowModal');
+  if (existing) existing.remove();
+  const modal = document.createElement('div');
+  modal.id = 'excelRowModal';
+  modal.className = 'modal-overlay';
+  modal.style.display = 'flex';
+  modal.innerHTML = `
+    <div class="modal-box" style="max-width:700px">
+      <div class="modal-title">📊 เลือกแถวข้อมูลจาก Excel</div>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:12px">พบ ${rows.length} แถว กรุณาเลือกแถวที่ต้องการโหลดเข้าฟอร์ม</p>
+      <div class="tbl-wrap" style="max-height:300px;overflow-y:auto">
+        <table>
+          <thead><tr><th>#</th><th>วันที่</th><th>เครื่อง</th><th>ผลผลิต</th><th>ของเสีย</th><th></th></tr></thead>
+          <tbody>${rows.map((r,i)=>`<tr>
+            <td>${i+1}</td>
+            <td>${r.date||r['วันที่']||'-'}</td>
+            <td>${r.machine||r['เครื่อง']||'-'}</td>
+            <td>${r.prodQty||r['ผลผลิต']||'-'}</td>
+            <td>${r.wasteQty||r['ของเสีย']||'-'}</td>
+            <td><button class="btn btn-primary btn-sm" onclick="selectExcelRow(${i})">เลือก</button></td>
+          </tr>`).join('')}</tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" onclick="document.getElementById('excelRowModal').remove()">ยกเลิก</button>
+      </div>
+    </div>`;
+  document.body.appendChild(modal);
+  // Store rows and callback
+  window._excelRows = rows;
+  window._excelFillFn = fillFromRow;
+}
+
+function selectExcelRow(idx) {
+  const row = window._excelRows[idx];
+  if (row && window._excelFillFn) window._excelFillFn(row);
+  const modal = document.getElementById('excelRowModal');
+  if (modal) modal.remove();
+}
+
+// ===== CLEAN OLD DATA =====
+function cleanOldData() {
+  if (!canDo('admin')) { showToast('ต้องการสิทธิ์ Admin','error'); return; }
+  const cutoff = new Date();
+  cutoff.setDate(cutoff.getDate() - 90);
+  const cutoffStr = cutoff.toISOString().slice(0,10);
+  const records = getRecords();
+  const before = records.length;
+  const kept = records.filter(r => r.date >= cutoffStr);
+  const removed = before - kept.length;
+  if (removed === 0) { showToast('ไม่มีข้อมูลเก่ากว่า 90 วัน','info'); return; }
+  if (!confirm(`พบข้อมูล ${removed} รายการที่เก่ากว่า 90 วัน\nต้องการลบออกไหม? (แนะนำ Backup ก่อน)`)) return;
+  saveRecords(kept);
+  addAudit('ล้างข้อมูลเก่า', `ลบ ${removed} รายการ (ก่อน ${cutoffStr})`);
+  showToast(`ลบข้อมูลเก่า ${removed} รายการแล้ว ✓`, 'success');
+}
+
+// ===== IMPORT EXCEL =====
+function showImportCSV() {
+  csvImportData = [];
+  document.getElementById('csvFile').value = '';
+  document.getElementById('csvPreview').innerHTML = `
+    <div style="margin-bottom:10px;font-size:13px;color:var(--text2)">
+      รองรับไฟล์ <strong>.csv</strong> และ <strong>.xlsx / .xls</strong> (Excel)<br>
+      คอลัมน์ที่ต้องมี: <code>date, machine, prodQty, wasteQty</code>
+    </div>`;
+  document.getElementById('confirmImportBtn').style.display = 'none';
+  document.getElementById('importCSVModal').style.display = 'flex';
+}
+
+function previewCSV(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const ext = file.name.split('.').pop().toLowerCase();
+  if (ext === 'xlsx' || ext === 'xls') {
+    // Load SheetJS dynamically if not loaded
+    if (typeof XLSX === 'undefined') {
+      const script = document.createElement('script');
+      script.src = 'https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js';
+      script.onload = () => parseExcel(file);
+      document.head.appendChild(script);
+    } else {
+      parseExcel(file);
+    }
+  } else {
+    parseCSVFile(file);
+  }
+}
+
+function parseExcel(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    try {
+      const wb = XLSX.read(e.target.result, {type:'array'});
+      const ws = wb.Sheets[wb.SheetNames[0]];
+      const rows = XLSX.utils.sheet_to_json(ws, {defval:''});
+      processImportRows(rows, file.name);
+    } catch(err) { showToast('ไม่สามารถอ่านไฟล์ Excel ได้','error'); }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function parseCSVFile(file) {
+  const reader = new FileReader();
+  reader.onload = e => {
+    const lines = e.target.result.split('\n').filter(l=>l.trim());
+    if (lines.length < 2) { showToast('ไฟล์ CSV ว่างเปล่า','error'); return; }
+    const headers = lines[0].split(',').map(h=>h.replace(/"/g,'').trim());
+    const rows = [];
+    for (let i=1;i<lines.length;i++) {
+      const vals = lines[i].split(',').map(v=>v.replace(/"/g,'').trim());
+      const row = {};
+      headers.forEach((h,idx)=>row[h]=vals[idx]||'');
+      rows.push(row);
+    }
+    processImportRows(rows, file.name);
+  };
+  reader.readAsText(file,'UTF-8');
+}
+
+function processImportRows(rows, filename) {
+  csvImportData = [];
+  let errors = 0;
+  rows.forEach(row => {
+    if (!row.date || !row.machine) { errors++; return; }
+    const prodQty = parseFloat(row.prodQty || row['ผลผลิต'] || row['production'] || 0) || 0;
+    const wasteQty = parseFloat(row.wasteQty || row['ของเสีย'] || row['waste'] || 0) || 0;
+    csvImportData.push({
+      id: genId(),
+      date: row.date || row['วันที่'] || '',
+      orderId: row.orderId || row['เลขที่ใบสั่งผลิต'] || row['order'] || '',
+      machine: parseInt(row.machine || row['เครื่อง'] || 0) || 0,
+      shift: row.shift || row['กะ'] || 'เช้า',
+      lotNo: row.lotNo || row['Lot'] || '',
+      materialType: row.materialType || row['วัตถุดิบ'] || '',
+      bagSize: row.bagSize || row['ขนาดถุง'] || '',
+      thickness: parseFloat(row.thickness || 0) || 0,
+      zone1: parseFloat(row.zone1 || 0) || 0,
+      zone2: parseFloat(row.zone2 || 0) || 0,
+      zone3: parseFloat(row.zone3 || 0) || 0,
+      flangeTemp: parseFloat(row.flangeTemp || 0) || 0,
+      dieTemp: parseFloat(row.dieTemp || 0) || 0,
+      screwMotor: parseFloat(row.screwMotor || 0) || 0,
+      thickMotor: parseFloat(row.thickMotor || 0) || 0,
+      wasteType: row.wasteType || row['ประเภทของเสีย'] || 'อื่นๆ',
+      prodQty, wasteQty,
+      wasteRate: calcWasteRate(prodQty, wasteQty),
+      cause: row.cause || row['สาเหตุ'] || '',
+      solution: row.solution || row['แนวทางแก้ไข'] || '',
+      responsible: row.responsible || row['ผู้รับผิดชอบ'] || '',
+      supplier: row.supplier || row['ซัพพลายเออร์'] || '',
+      createdBy: 'import', createdAt: new Date().toISOString()
+    });
+  });
+  const preview = document.getElementById('csvPreview');
+  preview.innerHTML = `
+    <div style="margin-bottom:8px;font-size:13px">
+      ไฟล์: <strong>${filename}</strong><br>
+      พบ <strong style="color:var(--green)">${csvImportData.length}</strong> รายการที่ถูกต้อง
+      ${errors ? `| ข้ามไป <strong style="color:var(--red)">${errors}</strong> รายการ (ข้อมูลไม่ครบ)` : ''}
+    </div>
+    <div class="tbl-wrap" style="max-height:200px;overflow-y:auto">
+      <table><thead><tr><th>วันที่</th><th>เครื่อง</th><th>กะ</th><th>ผลผลิต</th><th>ของเสีย</th><th>อัตรา%</th></tr></thead>
+      <tbody>${csvImportData.slice(0,20).map(r=>`<tr>
+        <td>${r.date}</td><td>${r.machine}</td><td>${r.shift}</td>
+        <td>${r.prodQty}</td><td>${r.wasteQty}</td><td>${r.wasteRate}%</td>
+      </tr>`).join('')}</tbody></table>
+    </div>`;
+  document.getElementById('confirmImportBtn').style.display = csvImportData.length ? 'block' : 'none';
+}
+
+// ===== GENERATE APP ICONS =====
+function generateIcon(size) {
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  const ctx = c.getContext('2d');
+  // Background
+  ctx.fillStyle = '#c0392b';
+  ctx.beginPath();
+  ctx.roundRect(0, 0, size, size, size * 0.2);
+  ctx.fill();
+  // Text HDPE
+  ctx.fillStyle = '#ffffff';
+  ctx.font = `bold ${size * 0.28}px Arial`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('HDPE', size / 2, size * 0.38);
+  // Subtext
+  ctx.font = `${size * 0.13}px Arial`;
+  ctx.fillStyle = 'rgba(255,255,255,0.8)';
+  ctx.fillText('TRACKER', size / 2, size * 0.62);
+  // Small line
+  ctx.fillStyle = 'rgba(255,255,255,0.4)';
+  ctx.fillRect(size * 0.2, size * 0.72, size * 0.6, 2);
+  ctx.font = `${size * 0.1}px Arial`;
+  ctx.fillStyle = 'rgba(255,255,255,0.6)';
+  ctx.fillText('RMUTR × SSW1988', size / 2, size * 0.83);
+  return c.toDataURL('image/png');
+}
+// Set apple touch icon dynamically
+window.addEventListener('load', () => {
+  const icon192 = generateIcon(192);
+  const link = document.querySelector('link[rel="apple-touch-icon"]');
+  if (link) link.href = icon192;
+});
+
+</script>
+</body>
+</html>
