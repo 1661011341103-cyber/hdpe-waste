@@ -257,6 +257,7 @@ canvas{max-width:100%}
     <button class="tab-btn" onclick="switchTab('records')">📋 รายการบันทึก</button>
     <button class="tab-btn" onclick="switchTab('maintenance')" id="tabMaintenance">🔧 ทำความสะอาด</button>
     <button class="tab-btn" onclick="switchTab('downtime')">⏱ Downtime</button>
+    <button class="tab-btn" onclick="switchTab('dailywaste')">🗑 ของเสียรายวัน</button>
     <button class="tab-btn" onclick="switchTab('recipe')">📋 สูตรผลิต</button>
     <button class="tab-btn" onclick="switchTab('analysis')">🔬 วิเคราะห์</button>
     <button class="tab-btn" onclick="switchTab('report')">📄 รายงาน</button>
@@ -266,6 +267,13 @@ canvas{max-width:100%}
 
     <!-- DASHBOARD TAB -->
     <div class="tab-panel active" id="panel-dashboard">
+      <!-- Month Filter -->
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;flex-wrap:wrap">
+        <label style="font-size:13px;font-weight:600;color:var(--text2)">📅 ดูข้อมูลเดือน:</label>
+        <select id="dashMonthFilter" onchange="renderDashboard()" style="padding:6px 12px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text);font-size:13px">
+        </select>
+        <button class="btn btn-secondary btn-sm" onclick="document.getElementById('dashMonthFilter').value='';renderDashboard()">เดือนนี้</button>
+      </div>
       <div id="alertBanners"></div>
       <div class="grid-4" id="kpiGrid" style="margin-bottom:16px"></div>
       <!-- OEE Section -->
@@ -387,6 +395,26 @@ canvas{max-width:100%}
           <div class="form-group">
             <label>ซัพพลายเออร์</label>
             <input type="text" id="f_supplier" placeholder="ชื่อซัพพลายเออร์">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>ชื่อลูกค้า</label>
+            <input type="text" id="f_customer" placeholder="ชื่อลูกค้า">
+          </div>
+          <div class="form-group">
+            <label>Code สินค้า</label>
+            <input type="text" id="f_productCode" placeholder="เช่น HDPE-001">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>รายละเอียดสินค้า</label>
+            <input type="text" id="f_productDetail" placeholder="รายละเอียดสินค้า">
+          </div>
+          <div class="form-group">
+            <label>จำนวนที่สั่งผลิต (kg)</label>
+            <input type="number" id="f_orderQty" placeholder="0.00" min="0" step="0.01">
           </div>
         </div>
         <!-- Material Lot -->
@@ -618,6 +646,9 @@ canvas{max-width:100%}
                 <th>Lot</th>
                 <th>วัตถุดิบ</th>
                 <th onclick="sortRecords('wasteType')">ประเภทของเสีย ↕</th>
+                <th>ลูกค้า</th>
+                <th>Code สินค้า</th>
+                <th onclick="sortRecords('orderQty')">สั่งผลิต(kg) ↕</th>
                 <th onclick="sortRecords('prodQty')">ผลผลิต(kg) ↕</th>
                 <th onclick="sortRecords('wasteQty')">ของเสีย(kg) ↕</th>
                 <th onclick="sortRecords('wasteRate')">อัตรา% ↕</th>
@@ -751,6 +782,97 @@ canvas{max-width:100%}
               <tr><th>วันที่</th><th>เครื่อง</th><th>เวลาเริ่ม</th><th>เวลาสิ้นสุด</th><th>ระยะเวลา(ชม.)</th><th>สาเหตุ</th><th>รายละเอียด</th><th>จัดการ</th></tr>
             </thead>
             <tbody id="downtimeTbody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- DAILY WASTE TAB -->
+    <div class="tab-panel" id="panel-dailywaste">
+      <div class="card" style="margin-bottom:16px">
+        <div class="card-title">🗑 บันทึกของเสียรายวัน</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>วันที่ *</label>
+            <input type="date" id="dw_date">
+          </div>
+          <div class="form-group">
+            <label>เครื่อง *</label>
+            <select id="dw_machine">
+              <option value="">-- เลือกเครื่อง --</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>กะ *</label>
+            <select id="dw_shift">
+              <option value="เช้า">เช้า</option>
+              <option value="บ่าย">บ่าย</option>
+              <option value="ดึก">ดึก</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>ของเสียรวม (kg) *</label>
+            <input type="number" id="dw_wasteQty" placeholder="0.00" min="0" step="0.01" oninput="calcDailyRate()">
+          </div>
+          <div class="form-group">
+            <label>ประเภทของเสียหลัก</label>
+            <select id="dw_wasteType">
+              <option value="">-- เลือก --</option>
+              <option value="จุดดำ">จุดดำ</option>
+              <option value="ฟิล์มขาด">ฟิล์มขาด</option>
+              <option value="ความหนาไม่สม่ำเสมอ">ความหนาไม่สม่ำเสมอ</option>
+              <option value="สีผิดปกติ">สีผิดปกติ</option>
+              <option value="รอยย่น">รอยย่น</option>
+              <option value="ฟองอากาศ">ฟองอากาศ</option>
+              <option value="อื่นๆ">อื่นๆ</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>หมายเหตุ</label>
+            <input type="text" id="dw_note" placeholder="หมายเหตุเพิ่มเติม...">
+          </div>
+        </div>
+        <!-- Preview อัตราของเสียรายวัน -->
+        <div id="dwPreview" style="display:none;margin-bottom:12px;padding:12px;background:var(--surface2);border-radius:8px;border-left:3px solid var(--accent)">
+          <div style="font-size:12px;color:var(--text2);margin-bottom:4px">ผลผลิตรวมวันนี้จากออเดอร์ที่บันทึก</div>
+          <div style="display:flex;gap:20px;flex-wrap:wrap">
+            <div><span style="font-size:11px;color:var(--text2)">ผลผลิตรวม:</span> <strong id="dw_totalProd">0</strong> kg</div>
+            <div><span style="font-size:11px;color:var(--text2)">ของเสีย:</span> <strong id="dw_wasteDisplay">0</strong> kg</div>
+            <div><span style="font-size:11px;color:var(--text2)">อัตราของเสีย:</span> <strong id="dw_rateDisplay" style="font-size:18px">0.00%</strong></div>
+          </div>
+        </div>
+        <button class="btn btn-primary" onclick="saveDailyWaste()">💾 บันทึกของเสียรายวัน</button>
+      </div>
+
+      <!-- ตารางประวัติ -->
+      <div class="card">
+        <div class="card-title">📋 ประวัติของเสียรายวัน</div>
+        <div class="filter-bar">
+          <input type="date" id="dw_flt_from">
+          <input type="date" id="dw_flt_to">
+          <select id="dw_flt_machine" style="font-size:12px"><option value="">ทุกเครื่อง</option></select>
+          <button class="btn btn-primary btn-sm" onclick="renderDailyWasteTable()">🔍 กรอง</button>
+        </div>
+        <!-- Summary -->
+        <div id="dwSummary" style="margin-bottom:12px"></div>
+        <div class="tbl-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th onclick="sortDW('date')">วันที่ ↕</th>
+                <th>เครื่อง</th>
+                <th>กะ</th>
+                <th onclick="sortDW('totalProd')">ผลผลิตรวม(kg) ↕</th>
+                <th onclick="sortDW('wasteQty')">ของเสีย(kg) ↕</th>
+                <th onclick="sortDW('wasteRate')">อัตรา% ↕</th>
+                <th>ประเภทหลัก</th>
+                <th>หมายเหตุ</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="dwTableBody"></tbody>
           </table>
         </div>
       </div>
@@ -1246,7 +1368,7 @@ canvas{max-width:100%}
 
 <script>
 // ===== CONSTANTS =====
-const MACHINE_LIST = [1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,21];
+const MACHINE_LIST = [1,2,3,4];
 const WASTE_TYPES = ['จุดดำ','ฟิล์มขาด','ความหนาไม่สม่ำเสมอ','สีผิดปกติ','รอยย่น','ฟองอากาศ','อื่นๆ'];
 const MAINTENANCE_TASKS = [
   {key:'screen', label:'เปลี่ยนตะแกรง', intervalDays:7},
@@ -1257,7 +1379,8 @@ const STORAGE = {
   records:'hdpe_records_v2', maintenance:'hdpe_maintenance_v1', config:'hdpe_config',
   pin:'hdpe_pin', theme:'hdpe_theme', session:'hdpe_session', templates:'hdpe_templates',
   audit:'hdpe_audit', recipes:'hdpe_recipes', downtime:'hdpe_downtime',
-  users:'hdpe_users', schedule:'hdpe_schedule', activeSessions:'hdpe_active_sessions', logo:'hdpe_logo', logo2:'hdpe_logo2'
+  users:'hdpe_users', schedule:'hdpe_schedule', activeSessions:'hdpe_active_sessions', logo:'hdpe_logo', logo2:'hdpe_logo2',
+  dailyWaste:'hdpe_daily_waste'
 };
 
 // ===== STATE =====
@@ -1668,6 +1791,7 @@ function switchTab(name) {
   if (name==='settings') { loadConfigUI(); renderUsersList(); renderScheduleList(); renderSummaryCanvas(); }
   if (name==='recipe') { renderRecipeList(); }
   if (name==='downtime') { renderDowntimeTable(); }
+  if (name==='dailywaste') { renderDailyWasteTable(); }
 }
 function closeModal(id) { document.getElementById(id).style.display='none'; }
 
@@ -1684,6 +1808,10 @@ function getFormData() {
     shift: document.getElementById('f_shift').value,
     responsible: document.getElementById('f_responsible').value.trim(),
     supplier: document.getElementById('f_supplier').value.trim(),
+    customer: document.getElementById('f_customer').value.trim(),
+    productCode: document.getElementById('f_productCode').value.trim(),
+    productDetail: document.getElementById('f_productDetail').value.trim(),
+    orderQty: parseFloat(document.getElementById('f_orderQty').value)||0,
     lotNo: document.getElementById('f_lotNo').value.trim(),
     materialType: document.getElementById('f_materialType').value.trim(),
     bagSize: document.getElementById('f_bagSize').value==='custom'?document.getElementById('f_bagCustom').value:document.getElementById('f_bagSize').value,
@@ -1752,7 +1880,8 @@ function clearForm() {
    'f_bagCustom','f_thickness','f_zone1','f_zone2','f_zone3','f_flangeTemp','f_dieTemp',
    'f_screwMotor','f_thickMotor','f_prodQty','f_wasteQty','f_cause','f_solution',
    'f_why1','f_why2','f_why3','f_why4','f_why5','f_rootCause',
-   'f_5m_man','f_5m_machine','f_5m_material','f_5m_method','f_5m_measurement','f_5m_environment','f_5m_problem'
+   'f_5m_man','f_5m_machine','f_5m_material','f_5m_method','f_5m_measurement','f_5m_environment','f_5m_problem',
+   'f_customer','f_productCode','f_productDetail','f_orderQty'
   ].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
   document.getElementById('f_date').value = new Date().toISOString().slice(0,10);
   document.getElementById('tempSuggestion').style.display='none';
@@ -1988,6 +2117,9 @@ function renderRecordsTable() {
       <td>${r.lotNo||'-'}</td>
       <td>${r.materialType||'-'}</td>
       <td>${r.wasteType||'-'}</td>
+      <td>${r.customer||'-'}</td>
+      <td>${r.productCode||'-'}</td>
+      <td style="text-align:right">${(r.orderQty||0).toFixed(1)}</td>
       <td>${(r.prodQty||0).toFixed(1)}</td>
       <td>${(r.wasteQty||0).toFixed(1)}</td>
       <td><span class="${rateClass}">${(r.wasteRate||0).toFixed(2)}%</span></td>
@@ -2937,35 +3069,76 @@ function drawScatterChart(canvasId, points, title) {
 }
 
 // ===== DASHBOARD =====
+function populateDashMonthFilter() {
+  const sel = document.getElementById('dashMonthFilter');
+  if (!sel) return;
+  const records = getRecords();
+  const months = new Set();
+  records.forEach(r => { if(r.date) months.add(r.date.slice(0,7)); });
+  getDailyWaste().forEach(d => { if(d.date) months.add(d.date.slice(0,7)); });
+  const sorted = [...months].sort().reverse();
+  const today = new Date().toISOString().slice(0,7);
+  // เก็บค่าที่เลือกไว้ก่อน
+  const current = sel.value;
+  sel.innerHTML = '<option value="">เดือนนี้ ('+today+')</option>' +
+    sorted.map(m => '<option value="'+m+'"'+(m===current?' selected':'')+'>'+m+'</option>').join('');
+  // คืนค่าที่เลือกไว้
+  if (current) sel.value = current;
+}
+
 function renderDashboard() {
+  populateDashMonthFilter();
   const records = getRecords();
   const cfg = getConfig();
   const today = new Date().toISOString().slice(0,10);
-  const thisMonth = today.slice(0,7);
-  const todayRecs = records.filter(r=>r.date===today);
+  // อ่านค่าหลัง populate
+  const sel = document.getElementById('dashMonthFilter');
+  const selectedMonth = (sel && sel.value) ? sel.value : today.slice(0,7);
+  const thisMonth = selectedMonth;
+  const isCurrentMonth = selectedMonth === today.slice(0,7);
+  const todayRecs = isCurrentMonth ? records.filter(r=>r.date===today) : [];
   const monthRecs = records.filter(r=>r.date.startsWith(thisMonth));
-  const totalWaste = monthRecs.reduce((s,r)=>s+r.wasteQty,0);
   const totalProd = monthRecs.reduce((s,r)=>s+r.prodQty,0);
-  const avgRate = totalProd>0?(totalWaste/totalProd*100).toFixed(2):0;
   const dtHours = getTotalDowntimeThisMonth();
+
+  // คำนวณของเสียจาก Daily Waste (ถ้ามี) หรือจาก records
+  const dailyWasteData = getDailyWaste().filter(d=>d.date.startsWith(thisMonth));
+  const useDailyWaste = dailyWasteData.length > 0;
+  const totalWaste = useDailyWaste
+    ? dailyWasteData.reduce((s,d)=>s+d.wasteQty,0)
+    : monthRecs.reduce((s,r)=>s+r.wasteQty,0);
+  const avgRate = totalProd>0?(totalWaste/totalProd*100).toFixed(2):0;
+
+  // ของเสียวันนี้ (เฉพาะเดือนปัจจุบัน)
+  const todayDW = isCurrentMonth ? getDailyWaste().filter(d=>d.date===today) : [];
+  const todayWaste = todayDW.reduce((s,d)=>s+d.wasteQty,0);
+  const todayProd = todayRecs.reduce((s,r)=>s+r.prodQty,0);
+  const todayRate = todayProd>0?(todayWaste/todayProd*100).toFixed(2):'-';
+
   const kpiGrid = document.getElementById('kpiGrid');
-  if (kpiGrid) kpiGrid.innerHTML=`
-    <div class="kpi-card"><div class="kpi-val">${todayRecs.length}</div><div class="kpi-label">บันทึกวันนี้</div></div>
-    <div class="kpi-card"><div class="kpi-val">${avgRate}%</div><div class="kpi-label">อัตราของเสียเดือนนี้</div></div>
-    <div class="kpi-card"><div class="kpi-val">${totalWaste.toFixed(1)}</div><div class="kpi-label">ของเสียรวม (kg)</div></div>
-    <div class="kpi-card" style="border-left-color:var(--yellow)"><div class="kpi-val" style="color:var(--yellow)">${dtHours.toFixed(1)}</div><div class="kpi-label">Downtime เดือนนี้ (ชม.)</div></div>`;
-  renderAlertBanners(records, cfg);
-  renderOEE(records, cfg);
+  if (kpiGrid) {
+    const rateColor = parseFloat(avgRate)>cfg.target ? 'var(--red)' : 'var(--green)';
+    const wasteLabel = useDailyWaste ? 'ของเสียรวมเดือนนี้ (kg) <span style="font-size:10px;color:var(--green)">(รายวัน)</span>' : 'ของเสียรวมเดือนนี้ (kg)';
+    const todayWasteLabel = todayWaste>0 ? todayWaste.toFixed(1)+' kg' : '-';
+    const todayRateLabel = todayRate!=='-' ? '('+todayRate+'%)' : '';
+    kpiGrid.innerHTML =
+      '<div class="kpi-card"><div class="kpi-val">'+todayRecs.length+'</div><div class="kpi-label">ออเดอร์วันนี้</div></div>' +
+      '<div class="kpi-card" style="border-left-color:'+rateColor+'"><div class="kpi-val" style="color:'+rateColor+'">'+avgRate+'%</div><div class="kpi-label">อัตราของเสียเดือนนี้</div></div>' +
+      '<div class="kpi-card"><div class="kpi-val">'+totalWaste.toFixed(1)+'</div><div class="kpi-label">'+wasteLabel+'</div></div>' +
+      '<div class="kpi-card" style="border-left-color:var(--yellow)"><div class="kpi-val" style="color:var(--yellow)">'+todayWasteLabel+'</div><div class="kpi-label">ของเสียวันนี้ '+todayRateLabel+'</div></div>';
+  }
+  renderAlertBanners(monthRecs, cfg);
+  renderOEE(monthRecs, cfg);
   renderTodaySchedule();
   updateTodayCounter();
-  renderTrendChart(records);
-  renderMachineChart(records);
-  renderDonutChart(records);
-  renderParetoChart(records);
-  renderShiftChart(records);
-  renderScatterChart(records);
-  renderTop5(records);
-  renderMachineStatusBars(records, cfg);
+  renderTrendChart(monthRecs);
+  renderMachineChart(monthRecs);
+  renderDonutChart(monthRecs);
+  renderParetoChart(monthRecs);
+  renderShiftChart(monthRecs);
+  renderScatterChart(monthRecs);
+  renderTop5(monthRecs);
+  renderMachineStatusBars(monthRecs, cfg);
 }
 function renderAlertBanners(records, cfg) {
   const el = document.getElementById('alertBanners');
@@ -3003,14 +3176,19 @@ function renderOEE(records, cfg) {
     </div>`;
   }).join('');
 }
-function renderTrendChart(records) {
-  const days=7, labels=[], values=[];
-  for (let i=days-1;i>=0;i--) {
-    const d=new Date(); d.setDate(d.getDate()-i);
-    const ds=d.toISOString().slice(0,10);
-    labels.push(ds.slice(5));
-    const dr=records.filter(r=>r.date===ds);
-    const p=dr.reduce((s,r)=>s+r.prodQty,0), w=dr.reduce((s,r)=>s+r.wasteQty,0);
+function renderTrendChart(monthRecs) {
+  const selectedMonth = document.getElementById('dashMonthFilter')?.value || new Date().toISOString().slice(0,7);
+  // สร้าง labels ทุกวันในเดือนที่เลือก
+  const [year, month] = selectedMonth.split('-').map(Number);
+  const daysInMonth = new Date(year, month, 0).getDate();
+  const labels = [], values = [];
+  for (let d=1; d<=daysInMonth; d++) {
+    const ds = selectedMonth+'-'+String(d).padStart(2,'0');
+    labels.push(String(d));
+    const dw = getDailyWaste().filter(r=>r.date===ds);
+    const dr = monthRecs.filter(r=>r.date===ds);
+    const p = dr.reduce((s,r)=>s+r.prodQty,0);
+    const w = dw.length>0 ? dw.reduce((s,r)=>s+r.wasteQty,0) : dr.reduce((s,r)=>s+r.wasteQty,0);
     values.push(p>0?(w/p*100):0);
   }
   drawLineChart('trendChart',labels,[{values,color:'#c0392b'}]);
@@ -3792,7 +3970,7 @@ function globalSearchHandler() {
 // ===== POPULATE SELECTS =====
 function populateSelects() {
   MACHINE_LIST.forEach(m=>{
-    ['f_machine','mt_machine','dt_machine','sch_machine','dt_flt_machine'].forEach(id=>{
+    ['f_machine','mt_machine','dt_machine','sch_machine','dt_flt_machine','dw_machine','dw_flt_machine'].forEach(id=>{
       const el=document.getElementById(id);
       if (el) { const opt=document.createElement('option'); opt.value=m; opt.textContent='เครื่อง '+m; el.appendChild(opt); }
     });
@@ -3821,6 +3999,7 @@ async function initApp() {
   document.getElementById('f_date').value=new Date().toISOString().slice(0,10);
   document.getElementById('mt_datetime').value=new Date().toISOString().slice(0,16);
   document.getElementById('dt_date').value=new Date().toISOString().slice(0,10);
+  document.getElementById('dw_date').value=new Date().toISOString().slice(0,10);
   document.getElementById('sch_date').value=new Date().toISOString().slice(0,10);
   updateReportDates();
   loadConfigUI();
@@ -3971,6 +4150,119 @@ function selectExcelRow(idx) {
   if (row && window._excelFillFn) window._excelFillFn(row);
   const modal = document.getElementById('excelRowModal');
   if (modal) modal.remove();
+}
+
+// ===== DAILY WASTE =====
+function getDailyWaste() { return load(STORAGE.dailyWaste, []); }
+function saveDailyWasteData(d) { save(STORAGE.dailyWaste, d); }
+
+let dwSortKey = 'date', dwSortDir = -1;
+
+function calcDailyRate() {
+  const date = document.getElementById('dw_date').value;
+  const machine = document.getElementById('dw_machine').value;
+  const wasteQty = parseFloat(document.getElementById('dw_wasteQty').value) || 0;
+  const preview = document.getElementById('dwPreview');
+  if (!date || !machine) { preview.style.display='none'; return; }
+  // หาผลผลิตรวมจากออเดอร์ที่บันทึกในวันและเครื่องนั้น
+  const recs = getRecords().filter(r => r.date === date && r.machine == machine);
+  const totalProd = recs.reduce((s,r) => s + (r.prodQty||0), 0);
+  const rate = totalProd > 0 ? (wasteQty / totalProd * 100) : 0;
+  const cfg = getConfig();
+  const color = rate > cfg.target*1.5 ? '#e74c3c' : rate > cfg.target ? '#f39c12' : '#27ae60';
+  document.getElementById('dw_totalProd').textContent = totalProd.toFixed(1);
+  document.getElementById('dw_wasteDisplay').textContent = wasteQty.toFixed(1);
+  document.getElementById('dw_rateDisplay').textContent = rate.toFixed(2) + '%';
+  document.getElementById('dw_rateDisplay').style.color = color;
+  preview.style.display = 'block';
+}
+
+function saveDailyWaste() {
+  const date = document.getElementById('dw_date').value;
+  const machine = document.getElementById('dw_machine').value;
+  const shift = document.getElementById('dw_shift').value;
+  const wasteQty = parseFloat(document.getElementById('dw_wasteQty').value) || 0;
+  const wasteType = document.getElementById('dw_wasteType').value;
+  const note = document.getElementById('dw_note').value.trim();
+  if (!date || !machine || !wasteQty) { showToast('กรุณากรอกข้อมูลให้ครบ','error'); return; }
+  // คำนวณผลผลิตรวมจากออเดอร์
+  const recs = getRecords().filter(r => r.date === date && r.machine == machine);
+  const totalProd = recs.reduce((s,r) => s + (r.prodQty||0), 0);
+  const wasteRate = totalProd > 0 ? parseFloat((wasteQty/totalProd*100).toFixed(2)) : 0;
+  const data = getDailyWaste();
+  // ตรวจสอบว่ามีบันทึกวันนี้+เครื่องนี้+กะนี้แล้วหรือยัง
+  const existing = data.findIndex(d => d.date===date && d.machine==machine && d.shift===shift);
+  const entry = { id: existing>=0 ? data[existing].id : genId(), date, machine: parseInt(machine), shift, totalProd, wasteQty, wasteRate, wasteType, note, updatedAt: new Date().toISOString() };
+  if (existing >= 0) {
+    data[existing] = entry;
+    showToast('อัปเดตของเสียรายวันแล้ว ✓','success');
+  } else {
+    data.unshift(entry);
+    showToast('บันทึกของเสียรายวันแล้ว ✓','success');
+  }
+  saveDailyWasteData(data);
+  addAudit('บันทึกของเสียรายวัน', `เครื่อง ${machine} ${date} ${wasteQty}kg (${wasteRate}%)`);
+  // เล่นเสียงถ้าเกิน target
+  const cfg = getConfig();
+  if (wasteRate > cfg.target) playAlert();
+  renderDailyWasteTable();
+  // ล้างฟอร์ม
+  document.getElementById('dw_wasteQty').value = '';
+  document.getElementById('dw_note').value = '';
+  document.getElementById('dwPreview').style.display = 'none';
+}
+
+function deleteDailyWaste(id) {
+  if (!canDo('admin')) { showToast('ต้องการสิทธิ์ Admin','error'); return; }
+  requirePin(() => {
+    const data = getDailyWaste().filter(d => d.id !== id);
+    saveDailyWasteData(data);
+    renderDailyWasteTable();
+    showToast('ลบแล้ว','success');
+  });
+}
+
+function sortDW(key) {
+  if (dwSortKey===key) dwSortDir*=-1; else { dwSortKey=key; dwSortDir=-1; }
+  renderDailyWasteTable();
+}
+
+function renderDailyWasteTable() {
+  const fltFrom = document.getElementById('dw_flt_from')?.value;
+  const fltTo = document.getElementById('dw_flt_to')?.value;
+  const fltM = document.getElementById('dw_flt_machine')?.value;
+  let data = getDailyWaste();
+  if (fltFrom) data = data.filter(d => d.date >= fltFrom);
+  if (fltTo) data = data.filter(d => d.date <= fltTo);
+  if (fltM) data = data.filter(d => d.machine == fltM);
+  data.sort((a,b) => {
+    let av = a[dwSortKey]||0, bv = b[dwSortKey]||0;
+    if (typeof av==='string') return av.localeCompare(bv)*dwSortDir;
+    return (av-bv)*dwSortDir;
+  });
+  // Summary
+  const totalWaste = data.reduce((s,d)=>s+d.wasteQty,0);
+  const totalProd = data.reduce((s,d)=>s+d.totalProd,0);
+  const avgRate = totalProd>0?(totalWaste/totalProd*100).toFixed(2):0;
+  const sumEl = document.getElementById('dwSummary');
+  if (sumEl) sumEl.innerHTML = `<div style="font-size:13px;color:var(--text2)">พบ <b>${data.length}</b> รายการ | ของเสียรวม: <b>${totalWaste.toFixed(1)}</b> kg | ผลผลิตรวม: <b>${totalProd.toFixed(1)}</b> kg | อัตราเฉลี่ย: <b>${avgRate}%</b></div>`;
+  const cfg = getConfig();
+  const tbody = document.getElementById('dwTableBody');
+  if (!tbody) return;
+  tbody.innerHTML = data.map(d => {
+    const cls = d.wasteRate > cfg.target ? 'badge-danger' : d.wasteRate > cfg.target*0.8 ? 'badge-warn' : 'badge-ok';
+    return `<tr>
+      <td>${d.date}</td>
+      <td>เครื่อง ${d.machine}</td>
+      <td>${d.shift}</td>
+      <td style="text-align:right">${(d.totalProd||0).toFixed(1)}</td>
+      <td style="text-align:right">${(d.wasteQty||0).toFixed(1)}</td>
+      <td><span class="${cls}">${(d.wasteRate||0).toFixed(2)}%</span></td>
+      <td>${d.wasteType||'-'}</td>
+      <td>${d.note||'-'}</td>
+      <td>${canDo('admin')?`<button class="btn btn-danger btn-sm" onclick="deleteDailyWaste('${d.id}')">🗑</button>`:'-'}</td>
+    </tr>`;
+  }).join('') || '<tr><td colspan="9" class="empty">ยังไม่มีข้อมูล</td></tr>';
 }
 
 // ===== CLEAN OLD DATA =====
