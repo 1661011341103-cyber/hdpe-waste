@@ -3131,14 +3131,17 @@ function renderDashboard() {
   renderOEE(monthRecs, cfg);
   renderTodaySchedule();
   updateTodayCounter();
-  renderTrendChart(monthRecs);
-  renderMachineChart(monthRecs);
-  renderDonutChart(monthRecs);
-  renderParetoChart(monthRecs);
-  renderShiftChart(monthRecs);
-  renderScatterChart(monthRecs);
   renderTop5(monthRecs);
   renderMachineStatusBars(monthRecs, cfg);
+  // วาด charts หลัง DOM render เสร็จ
+  setTimeout(() => {
+    renderTrendChart(monthRecs);
+    renderMachineChart(monthRecs);
+    renderDonutChart(monthRecs);
+    renderParetoChart(monthRecs);
+    renderShiftChart(monthRecs);
+    renderScatterChart(monthRecs);
+  }, 50);
 }
 function renderAlertBanners(records, cfg) {
   const el = document.getElementById('alertBanners');
